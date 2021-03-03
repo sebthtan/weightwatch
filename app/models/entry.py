@@ -12,9 +12,9 @@ class Entry(db.Model):
     bench_press = db.Column(db.Integer)
     squat = db.Column(db.Integer)
     deadlift = db.Column(db.Integer)
-    createdAt = db.Column(
+    created_at = db.Column(
         db.DateTime, default=datetime.datetime.utcnow, nullable=False)
-    updatedAt = db.Column(
+    updated_at = db.Column(
         db.DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     user = db.relationship('User', back_populates='entries')
