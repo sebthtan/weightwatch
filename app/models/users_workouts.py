@@ -1,8 +1,11 @@
 from .db import db
+# from .user import User
+# from .workout import Workout
 
 
 users_workouts = db.Table(
     'users_workouts',
+    db.metadata,
     db.Column(
         'user_id',
         db.Integer,

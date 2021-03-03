@@ -1,9 +1,9 @@
 from .db import db
 import datetime
 
+
 class Entry(db.Model):
     __tablename__ = 'entries'
-
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(
@@ -12,8 +12,9 @@ class Entry(db.Model):
     bench_press = db.Column(db.Integer)
     squat = db.Column(db.Integer)
     deadlift = db.Column(db.Integer)
-    createdAt = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
-    updatedAt = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+    createdAt = db.Column(
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+    updatedAt = db.Column(
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False)
 
-
-    user = db.relationship('User', back_populates='entries', cascade='all, delete-orphan')
+    user = db.relationship('User', back_populates='entries')
