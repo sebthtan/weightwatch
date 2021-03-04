@@ -2,3 +2,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.bg-dark {
+    background-color: #121212;
+}
+
+body {
+    height: 100vh;
+    background-color: #121212;
+}
+
+.content {
+    margin-top: 56px;
+}
+
+.push {
+    transition: 400ms;
+}

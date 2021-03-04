@@ -18,3 +18,14 @@ class Entry(db.Model):
         db.DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     user = db.relationship('User', back_populates='entries')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'body_weight': self.body_weight,
+            'bench_press': self.bench_press,
+            'squat': self.squat,
+            'deadlift': self.deadlift,
+            'created_at': self.created_at,
+        }

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { login } from "../../services/auth";
+import { useDispatch } from 'react-redux'
+import { addUser } from '../../store/session'
 
 const LoginForm = ({ authenticated, setAuthenticated }) => {
+  const dispatch = useDispatch()
   const [errors, setErrors] = useState([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,10 +15,22 @@ const LoginForm = ({ authenticated, setAuthenticated }) => {
     const user = await login(email, password);
     if (!user.errors) {
       setAuthenticated(true);
+      dispatch(addUser(user))
     } else {
       setErrors(user.errors);
     }
   };
+
+  const onDemoLogin = async (e) => {
+    e.preventDefault();
+    const user = await login("demo@aa.io", "password");
+    if (!user.errors) {
+      setAuthenticated(true);
+      dispatch(addUser(user));
+    } else {
+      setErrors(user.errors);
+    }
+  }
 
   const updateEmail = (e) => {
     setEmail(e.target.value);

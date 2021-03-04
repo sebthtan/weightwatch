@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify
-from flask_login import login_required
-from app.models import User
+from flask import Blueprint, jsonify, request
+from flask_login import login_required, current_user
+from app.models import User, Entry
 
 user_routes = Blueprint('users', __name__)
 
@@ -17,3 +17,15 @@ def users():
 def user(id):
     user = User.query.get(id)
     return user.to_dict()
+
+
+@user_routes.route('/<int:id>/entries')
+@login_required
+def get_user_entries(id):
+    # user = User.query.get(id)
+    entries = Entry.query.filter(Entry.user_id == id).order_by(
+        Entry.created_at.asc()).all()
+    user_entries = []
+    for entry in entries:
+        user_entries.append(entry.to_dict())
+    return jsonify(user_entries)
