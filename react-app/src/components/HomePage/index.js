@@ -7,17 +7,12 @@ const HomePage = () => {
 
     return (
         user && (
-            <>
-
-                <div className='bg-dark'>
-                    <div>
-                        <p className='font-sans text-white'>
-                            {`Hello, ${user.username}`}
-                        </p>
-                    </div>
+            <div>
+                <div>
+                    <h2 className='text-white'>yes</h2>
                 </div>
                 <LineGraph />
-            </>
+            </div>
         )
     )
 }

@@ -35,30 +35,32 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className='content'>
-        <Switch>
-          <Route path="/login" exact={true}>
-            <LoginForm
-              authenticated={authenticated}
-              setAuthenticated={setAuthenticated}
-            />
-          </Route>
-          <Route path="/sign-up" exact={true}>
-            <SignUpForm authenticated={authenticated} setAuthenticated={setAuthenticated} />
-          </Route>
-          <ProtectedRoute path="/users" exact={true} authenticated={authenticated}>
-            <UsersList />
-          </ProtectedRoute>
-          <ProtectedRoute path="/users/:userId" exact={true} authenticated={authenticated}>
-            <NavBar setAuthenticated={setAuthenticated} />
+      <Switch>
+        <Route path="/login" exact={true}>
+          <LoginForm
+            authenticated={authenticated}
+            setAuthenticated={setAuthenticated}
+          />
+        </Route>
+        <Route path="/sign-up" exact={true}>
+          <SignUpForm authenticated={authenticated} setAuthenticated={setAuthenticated} />
+        </Route>
+        <ProtectedRoute path="/users" exact={true} authenticated={authenticated}>
+          <UsersList />
+        </ProtectedRoute>
+        <ProtectedRoute path="/users/:userId" exact={true} authenticated={authenticated}>
+          <NavBar setAuthenticated={setAuthenticated} />
+          <div className='content'>
             <User />
-          </ProtectedRoute>
-          <ProtectedRoute path="/" exact={true} authenticated={authenticated}>
-            <NavBar setAuthenticated={setAuthenticated} />
+          </div>
+        </ProtectedRoute>
+        <ProtectedRoute path="/" exact={true} authenticated={authenticated}>
+          <NavBar setAuthenticated={setAuthenticated} />
+          <div className='content'>
             <HomePage />
-          </ProtectedRoute>
-        </Switch>
-      </div>
+          </div>
+        </ProtectedRoute>
+      </Switch>
     </BrowserRouter>
   );
 }
