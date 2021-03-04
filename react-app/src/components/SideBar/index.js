@@ -12,8 +12,9 @@ const SideBar = ({ isOpen }) => {
             enterFrom='-ml-64'
             enterTo='ml-0'
             leave='transition-all duration-400'
-            leaveTo='-ml-64'>
-            <aside className='fixed bg-white bg-opacity-20 w-64 min-h-screen flex flex-col z-10'>
+            leaveTo='-ml-64'
+        >
+            <aside className='fixed w-64 min-h-screen flex flex-col z-20' style={{ backgroundColor: '#414141' }}>
                 <div className='flex-grow text-white'>
                     <nav>
                         <ul>

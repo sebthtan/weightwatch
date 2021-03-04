@@ -8,6 +8,14 @@
     background-color: #121212;
 }
 
+.bg-light {
+    background-color: #252526;
+}
+
+.bg-input-light {
+    background-color: #333337;
+}
+
 body {
     height: 100vh;
     background-color: #121212;
@@ -17,6 +25,22 @@ body {
     margin-top: 56px;
 }
 
-.push {
-    transition: 400ms;
+button:focus {
+    outline: none;
+}
+
+*:focus {
+    outline: none;
+}
+
+.custom-border-color {
+    border-color: #3B3B3E;
+}
+
+.field-focus:focus {
+    border: 2px solid #ea80fc
+}
+
+.font-bold-hover:hover {
+    font-weight: 400;
 }
