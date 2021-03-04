@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import './LineGraph.css'
 import { AddOutlined } from '@material-ui/icons'
 import Modal from 'react-modal'
+import EntryForm from '../EntryForm'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 
 Modal.setAppElement('#root')
@@ -95,10 +96,6 @@ const LineGraph = () => {
         setTrackWeight('Deadlift')
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-    }
-
     return (
         entries.length > 0 && (
             <div className='container flex justify-center min-w-full p-8'>
@@ -110,51 +107,7 @@ const LineGraph = () => {
                     </div>
                     <Modal className='absolute' isOpen={isModalOpen} onRequestClose={closeModal} contentLabel='test' style={customStyles}>
                         <div className='container flex bg-light'>
-                            <form className='container flex flex-col text-gray-300 bg-light p-16' onSubmit={handleSubmit}>
-                                <div className='container flex flex-col justify-center items-start'>
-                                    <label className='mx-1 my-3'>
-                                        Body Weight
-                                </label>
-                                    <div className='container flex w-full '>
-                                        <input className='bg-input-light border-2 custom-border-color w-full field-focus p-1' type='text'>
-                                        </input>
-                                    </div>
-                                </div>
-                                <div className='container flex flex-col justify-center items-start'>
-                                    <label className='mx-1 my-3'>
-                                        Bench Press
-                                </label>
-                                    <div className='container flex w-full '>
-                                        <input className='bg-input-light border-2 custom-border-color w-full field-focus p-1' type='text'>
-                                        </input>
-                                    </div>
-                                </div>
-                                <div className='container flex flex-col justify-center items-start'>
-                                    <label className='mx-1 my-3'>
-                                        Squat
-                                </label>
-                                    <div className='container flex w-full '>
-                                        <input className='bg-input-light border-2 custom-border-color w-full field-focus p-1' type='text'>
-                                        </input>
-                                    </div>
-                                </div>
-                                <div className='container flex flex-col justify-center items-start'>
-                                    <label className='mx-1 my-3'>
-                                        Deadlift
-                                </label>
-                                    <div className='container flex w-full '>
-                                        <input className='bg-input-light border-2 custom-border-color w-full field-focus p-1' type='text'>
-                                        </input>
-                                    </div>
-                                </div>
-                                <div className='container flex justify-end items-center mt-10'>
-                                    <button className='flex justify-center items-center w-28 h-8 border-2 custom-border-color bg-input-light' style={{ color: '#ea80fc' }} type='submit'>
-                                        <h2 >
-                                            Add Entry
-                                    </h2>
-                                    </button>
-                                </div>
-                            </form>
+                            <EntryForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
                         </div>
                     </Modal>
                     <div className='container flex justify-between items-center pb-8 px-4'>

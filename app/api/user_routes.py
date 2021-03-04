@@ -29,3 +29,8 @@ def get_user_entries():
     for entry in entries:
         user_entries.append(entry.to_dict())
     return jsonify(user_entries)
+
+
+# @user_routes.route('/entries/new')
+# @login_required
+# def post_entry():
