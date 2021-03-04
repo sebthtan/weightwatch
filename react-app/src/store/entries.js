@@ -5,8 +5,8 @@ const getEntries = (entries) => ({
     payload: entries
 })
 
-export const getUserEntries = (userId) => async dispatch => {
-    const res = await fetch(`/api/users/${userId}/entries`)
+export const getUserEntries = () => async dispatch => {
+    const res = await fetch(`/api/users/entries`)
     const entries = await res.json()
     dispatch(getEntries(entries))
     return entries

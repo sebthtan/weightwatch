@@ -23,7 +23,6 @@ function App() {
       if (!user.errors) {
         setAuthenticated(true);
         dispatch(addUser(user))
-        dispatch(getUserEntries(user.id))
       }
       setLoaded(true);
     })();
