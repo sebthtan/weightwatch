@@ -10,7 +10,6 @@ import User from "./components/User";
 import { authenticate } from "./services/auth";
 import { useDispatch } from "react-redux";
 import { addUser } from "./store/session";
-import { getUserEntries } from './store/entries'
 
 function App() {
   const dispatch = useDispatch()
@@ -23,7 +22,6 @@ function App() {
       if (!user.errors) {
         setAuthenticated(true);
         dispatch(addUser(user))
-        dispatch(getUserEntries(user.id))
       }
       setLoaded(true);
     })();

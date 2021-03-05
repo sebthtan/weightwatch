@@ -3,7 +3,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import './LineGraph.css'
 import { AddOutlined } from '@material-ui/icons'
 import Modal from 'react-modal'
+import EntryForm from '../EntryForm'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
+
+Modal.setAppElement('#root')
 
 const LineGraph = () => {
     const dispatch = useDispatch()
@@ -93,102 +96,54 @@ const LineGraph = () => {
         setTrackWeight('Deadlift')
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-    }
-
     return (
-        <div className='container flex justify-center min-w-full p-8'>
-            <div className='m-0 container w-3/5 p-4 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl'>
-                <div className='container flex justify-center items-center self-end w-6 h-6 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30'>
-                    <button onClick={openModal} className='w-6 h-6 flex justify-center items-center'>
-                        <AddOutlined className='text-gray-300' style={{ color: '#fcf480' }} />
-                    </button>
-                </div>
-                <Modal className='absolute' isOpen={isModalOpen} onRequestClose={closeModal} contentLabel='test' style={customStyles}>
-                    <div className='container flex bg-light'>
-                        <form className='container flex flex-col text-gray-300 bg-light p-16' onSubmit={handleSubmit}>
-                            <div className='container flex flex-col justify-center items-start'>
-                                <label className='mx-1 my-3'>
+        entries.length > 0 && (
+            <div className='container flex justify-center min-w-full p-8'>
+                <div className='m-0 container w-3/5 p-4 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl'>
+                    <div className='container flex justify-center items-center self-end w-6 h-6 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30'>
+                        <button onClick={openModal} className='w-6 h-6 flex justify-center items-center'>
+                            <AddOutlined className='text-gray-300' style={{ color: '#fcf480' }} />
+                        </button>
+                    </div>
+                    <Modal className='absolute' isOpen={isModalOpen} onRequestClose={closeModal} contentLabel='test' style={customStyles}>
+                        <div className='container flex bg-light'>
+                            <EntryForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+                        </div>
+                    </Modal>
+                    <div className='container flex justify-between items-center pb-8 px-4'>
+                        <div className='container flex flex-col justify-center items-center'>
+                            <button className='flex justify-center items-center focus:outline-none' onClick={changeToBodyWeight}>
+                                <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isBodyWeight ? { fontWeight: '750', color: '#ea80fc' } : {}}>
                                     Body Weight
-                                </label>
-                                <div className='container flex w-full '>
-                                    <input className='bg-input-light border-2 custom-border-color w-full field-focus p-1' type='text'>
-                                    </input>
-                                </div>
-                            </div>
-                            <div className='container flex flex-col justify-center items-start'>
-                                <label className='mx-1 my-3'>
+                        </h1>
+                            </button>
+                            {isBodyWeight ? lbs : <></>}
+                        </div>
+                        <div className='container flex flex-col justify-center items-center'>
+                            <button className='flex justify-center items-center focus:outline-none' onClick={changeToBenchWeight}>
+                                <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isBench ? { fontWeight: '750', color: '#ea80fc' } : {}}>
                                     Bench Press
-                                </label>
-                                <div className='container flex w-full '>
-                                    <input className='bg-input-light border-2 custom-border-color w-full field-focus p-1' type='text'>
-                                    </input>
-                                </div>
-                            </div>
-                            <div className='container flex flex-col justify-center items-start'>
-                                <label className='mx-1 my-3'>
+                        </h1>
+                            </button>
+                            {isBench ? lbs : <></>}
+                        </div>
+                        <div className='container flex flex-col justify-center items-center'>
+                            <button className='flex justify-center items-center focus:outline-none' onClick={changeToSquatWeight}>
+                                <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isSquat ? { fontWeight: '750', color: '#ea80fc' } : {}}>
                                     Squat
-                                </label>
-                                <div className='container flex w-full '>
-                                    <input className='bg-input-light border-2 custom-border-color w-full field-focus p-1' type='text'>
-                                    </input>
-                                </div>
-                            </div>
-                            <div className='container flex flex-col justify-center items-start'>
-                                <label className='mx-1 my-3'>
+                        </h1>
+                            </button>
+                            {isSquat ? lbs : <></>}
+                        </div>
+                        <div className='container flex flex-col justify-center items-center'>
+                            <button className='flex justify-center items-center focus:outline-none' onClick={changeToDeadliftWeight}>
+                                <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isDeadlift ? { fontWeight: '750', color: '#ea80fc' } : {}}>
                                     Deadlift
-                                </label>
-                                <div className='container flex w-full '>
-                                    <input className='bg-input-light border-2 custom-border-color w-full field-focus p-1' type='text'>
-                                    </input>
-                                </div>
-                            </div>
-                            <div className='container flex justify-end items-center mt-10'>
-                                <button className='flex justify-center items-center w-28 h-8 border-2 custom-border-color bg-input-light' style={{ color: '#ea80fc' }} type='submit'>
-                                    <h2 >
-                                        Add Entry
-                                    </h2>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </Modal>
-                <div className='container flex justify-between items-center pb-8 px-4'>
-                    <div className='container flex flex-col justify-center items-center'>
-                        <button className='flex justify-center items-center focus:outline-none' onClick={changeToBodyWeight}>
-                            <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isBodyWeight ? { fontWeight: '750', color: '#ea80fc' } : {}}>
-                                Body Weight
                         </h1>
-                        </button>
-                        {isBodyWeight ? lbs : <></>}
+                            </button>
+                            {isDeadlift ? lbs : <></>}
+                        </div>
                     </div>
-                    <div className='container flex flex-col justify-center items-center'>
-                        <button className='flex justify-center items-center focus:outline-none' onClick={changeToBenchWeight}>
-                            <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isBench ? { fontWeight: '750', color: '#ea80fc' } : {}}>
-                                Bench Press
-                        </h1>
-                        </button>
-                        {isBench ? lbs : <></>}
-                    </div>
-                    <div className='container flex flex-col justify-center items-center'>
-                        <button className='flex justify-center items-center focus:outline-none' onClick={changeToSquatWeight}>
-                            <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isSquat ? { fontWeight: '750', color: '#ea80fc' } : {}}>
-                                Squat
-                        </h1>
-                        </button>
-                        {isSquat ? lbs : <></>}
-                    </div>
-                    <div className='container flex flex-col justify-center items-center'>
-                        <button className='flex justify-center items-center focus:outline-none' onClick={changeToDeadliftWeight}>
-                            <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isDeadlift ? { fontWeight: '750', color: '#ea80fc' } : {}}>
-                                Deadlift
-                        </h1>
-                        </button>
-                        {isDeadlift ? lbs : <></>}
-                    </div>
-                </div>
-                {entries.length > 0 && (
                     <ResponsiveContainer width='90%' height={300}>
                         <LineChart
                             width={800}
@@ -197,28 +152,28 @@ const LineGraph = () => {
                         >
                             <XAxis dataKey="created_at" axisLine={false} tickLine={false} />
                             <YAxis domain={domain} dataKey={weightType} axisLine={false} tickLine={false} />
-                            <Line animationDuration={800} type="monotone" dataKey={weightType} stroke="#ea80fc" yAxisId={0} activeDot={{ stroke: 'darkblue' }} />
+                            <Line connectNulls={true} animationDuration={800} type="monotone" dataKey={weightType} stroke="#ea80fc" yAxisId={0} activeDot={{ stroke: 'darkblue' }} />
                             <CartesianGrid vertical={false} strokeDasharray='3' />
                             <Tooltip className='text-gray' />
                         </LineChart>
                     </ResponsiveContainer>
-                )}
-                {/* <div className='container flex items-center w-full justify-around text-gray-300'>
-                    <button className='focus:outline-none flex justify-center items-center font-bold' >
-                        <span>1M</span>
+                    {/* <div className='container flex items-center w-full justify-around text-gray-300'>
+                <button className='focus:outline-none flex justify-center items-center font-bold' >
+                <span>1M</span>
+                </button>
+                <button className='focus:outline-none flex justify-center items-center font-bold'>
+                <span>6M</span>
+                </button>
+                <button className='focus:outline-none flex justify-center items-center font-bold'>
+                <span>1Y</span>
                     </button>
                     <button className='focus:outline-none flex justify-center items-center font-bold'>
-                        <span>6M</span>
-                    </button>
-                    <button className='focus:outline-none flex justify-center items-center font-bold'>
-                        <span>1Y</span>
-                    </button>
-                    <button className='focus:outline-none flex justify-center items-center font-bold'>
-                        <span>All</span>
+                    <span>All</span>
                     </button>
                 </div> */}
+                </div>
             </div>
-        </div>
+        )
     )
 }
 
