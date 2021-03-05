@@ -46,7 +46,7 @@ const NavBar = ({ setAuthenticated }) => {
           </li>
         </ul>
       </nav >
-      <SideBar isOpen={isOpen} />
+      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   );
 }

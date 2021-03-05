@@ -1,5 +1,6 @@
 const GET_ENTRIES = 'entries/GET_ENTRIES'
 const NEW_ENTRY = 'entries/NEW_ENTRY'
+const DELETE_ENTRY = 'entries/DELETE_ENTRY'
 
 const getEntries = (entries) => ({
     type: GET_ENTRIES,
@@ -9,6 +10,11 @@ const getEntries = (entries) => ({
 const newEntry = (entry) => ({
     type: NEW_ENTRY,
     payload: entry
+})
+
+const deleteOneEntry = (entryId) => ({
+    type: DELETE_ENTRY,
+    payload: entryId
 })
 
 export const getUserEntries = () => async dispatch => {
@@ -40,6 +46,16 @@ export const createEntry = (entry) => async dispatch => {
     return data
 }
 
+export const deleteEntry = (entryId) => async dispatch => {
+    const res = await fetch(`/api/entries/${entryId}`, {
+        method: 'DELETE',
+    })
+    console.log('IN ACTION THUNK', entryId)
+    // const data = await res.json()
+    dispatch(deleteOneEntry(entryId))
+    // return data
+}
+
 const initialState = []
 
 const entriesReducer = (state = initialState, action) => {
@@ -51,6 +67,13 @@ const entriesReducer = (state = initialState, action) => {
         case NEW_ENTRY:
             newState = [...state, action.payload]
             return newState
+        case DELETE_ENTRY:
+            newState = [...state]
+            // let found = newState.find(async entry => {
+            //     await entry.id === action.payload
+            // })
+            // delete newState[newState.indexOf(found)]
+            return newState.filter(entry => entry.id !== action.payload)
         default:
             return state
     }

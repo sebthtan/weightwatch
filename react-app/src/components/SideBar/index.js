@@ -1,9 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import Transition from '../Transition'
 
-const SideBar = ({ isOpen }) => {
+const SideBar = ({ isOpen, setIsOpen }) => {
 
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const close = () => {
+            setIsOpen(false);
+        };
+
+        document.addEventListener('click', close);
+
+        return () => document.removeEventListener("click", close);
+    }, [isOpen, setIsOpen]);
 
     return (
         <Transition
