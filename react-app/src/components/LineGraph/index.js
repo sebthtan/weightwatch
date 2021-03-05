@@ -4,6 +4,7 @@ import './LineGraph.css'
 import { AddOutlined } from '@material-ui/icons'
 import Modal from 'react-modal'
 import EntryForm from '../EntryForm'
+import Dropdown from './Dropdown'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 
 Modal.setAppElement('#root')
@@ -13,6 +14,7 @@ const LineGraph = () => {
     const entries = useSelector(state => state.entries)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [trackWeight, setTrackWeight] = useState('Body Weight')
+    const [dataPoint, setDataPoint] = useState([])
     const isBodyWeight = trackWeight === 'Body Weight'
     const isBench = trackWeight === 'Bench Press'
     const isSquat = trackWeight === 'Squat'
@@ -20,14 +22,24 @@ const LineGraph = () => {
 
     const forceAnimation = (key) => {
         let data = []
-        entries.forEach(entry => {
-            let obj = {}
-            obj[key] = entry[key]
-            obj['created_at'] = entry.created_at
-            data.push(obj)
-        })
+        for (let i = 0; i < entries.length; i++) {
+            let entry = entries[i]
+            if (!entry) {
+                continue
+            } else {
+                let obj = {}
+                obj[key] = entry[key]
+                obj['created_at'] = (new Date(entry.created_at).getTime() / 1000)
+                obj['id'] = entry.id
+                data.push(obj)
+            }
+        }
         return data
     }
+
+    const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+        "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+    ];
 
     const openModal = () => {
         setIsModalOpen(true)
@@ -56,7 +68,7 @@ const LineGraph = () => {
             width: '50vw'
         },
         overlay: {
-            backgroundColor: 'rgba(20, 20, 20, 0.6)',
+            backgroundColor: 'rgba(20, 20, 20, 0.9)',
             zIndex: '21'
         }
     };
@@ -82,25 +94,36 @@ const LineGraph = () => {
     // Do not try to refactor this; will cause infinite rerenders for some reason
     const changeToBodyWeight = () => {
         setTrackWeight('Body Weight')
+        setDataPoint([])
     }
 
     const changeToBenchWeight = () => {
         setTrackWeight('Bench Press')
+        setDataPoint([])
     }
 
     const changeToSquatWeight = () => {
         setTrackWeight('Squat')
+        setDataPoint([])
     }
 
     const changeToDeadliftWeight = () => {
         setTrackWeight('Deadlift')
+        setDataPoint([])
+    }
+
+    const clickedDot = (e, payload) => {
+        setDataPoint(Object.keys(payload).map(key => {
+            return { [key]: payload[key] }
+        }))
+        console.log(payload)
     }
 
     return (
         entries.length > 0 && (
             <div className='container flex justify-center min-w-full p-8'>
-                <div className='m-0 container w-3/5 p-4 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl'>
-                    <div className='container flex justify-center items-center self-end w-6 h-6 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30'>
+                <div className='m-0 container w-3/5 p-4 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl shadow-md border-2' style={{ borderColor: '#373737' }}>
+                    <div className='container flex justify-center items-center self-end w-8 h-8 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30'>
                         <button onClick={openModal} className='w-6 h-6 flex justify-center items-center'>
                             <AddOutlined className='text-gray-300' style={{ color: '#fcf480' }} />
                         </button>
@@ -150,13 +173,27 @@ const LineGraph = () => {
                             height={300}
                             data={forceAnimation(weightType)}
                         >
-                            <XAxis dataKey="created_at" axisLine={false} tickLine={false} />
+                            <XAxis type='number' dataKey="created_at" axisLine={false} tickLine={false} domain={["dataMin", "dataMax"]}
+                                tickFormatter={(unixTime) => {
+                                    let dateObj = new Date(unixTime * 1000)
+                                    return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
+                                }}
+                            />
                             <YAxis domain={domain} dataKey={weightType} axisLine={false} tickLine={false} />
-                            <Line connectNulls={true} animationDuration={800} type="monotone" dataKey={weightType} stroke="#ea80fc" yAxisId={0} activeDot={{ stroke: 'darkblue' }} />
+                            <Line connectNulls={true} animationDuration={800} type="monotone" dataKey={weightType} stroke="#ea80fc" yAxisId={0} activeDot={{ stroke: '#fcf480', onClick: clickedDot }} />
                             <CartesianGrid vertical={false} strokeDasharray='3' />
-                            <Tooltip className='text-gray' />
+                            {/* {!isDropdownOpen && */}
+                            <Tooltip className='text-gray' labelFormatter={(unixTime) => {
+                                let dateObj = new Date(unixTime * 1000)
+                                return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
+                            }} />
                         </LineChart>
                     </ResponsiveContainer>
+                    {dataPoint.length > 0 && (
+
+                        <Dropdown trackWeight={trackWeight} dataPoint={dataPoint} monthNames={monthNames} />
+                    )}
+
                     {/* <div className='container flex items-center w-full justify-around text-gray-300'>
                 <button className='focus:outline-none flex justify-center items-center font-bold' >
                 <span>1M</span>

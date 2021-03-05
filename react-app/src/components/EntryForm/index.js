@@ -30,7 +30,7 @@ const EntryForm = ({ isModalOpen, setIsModalOpen }) => {
         >
             <div>
                 <ul>
-                    {errors.map((error, idx) => <li className='text-red-500' key={idx}>{error}</li>)}
+                    {errors.map((error, idx) => <li style={{ color: '#CF6679' }} key={idx}>{error}</li>)}
                 </ul>
             </div>
             <div className='container flex flex-col justify-center items-start'>

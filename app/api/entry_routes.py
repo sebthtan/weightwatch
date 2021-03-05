@@ -28,3 +28,22 @@ def create_entry():
 
         return entry.to_dict()
     return {'errors': validation_errors_to_error_messages(form.errors)}
+
+
+@entry_routes.route('/<int:entry_id>', methods=['DELETE'])
+@login_required
+def delete_entry(entry_id):
+    entry = Entry.query.get(entry_id)
+    if entry.user_id == current_user.id:
+        db.session.delete(entry)
+        db.session.commit()
+        return 'Deleted Entry'
+    else:
+        return 'Error: could not delete'
+
+
+# @entry_routes.route('/<int:entry_id>', methods=['PUT'])
+# @login_required
+# def update_entry(entry_id):
+#     entry = Entry.query.get(entry_id)
+#     if entry.user_id == current_user.id:

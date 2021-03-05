@@ -8,6 +8,18 @@
     background-color: #121212;
 }
 
+.main-pink {
+    color: #ea80fc;
+}
+
+.main-yellow {
+    color: #fcf480;
+}
+
+.light-border {
+    border-color: #373737;
+}
+
 .bg-light {
     background-color: #252526;
 }
