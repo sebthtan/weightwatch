@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { deleteEntry } from '../../store/entries'
 import { BarChart, Delete, Edit, FitnessCenter, Event } from '@material-ui/icons'
 
-const Dropdown = ({ trackWeight, dataPoint, monthNames }) => {
+const Dropdown = ({ trackWeight, dataPoint, setDataPoint, monthNames }) => {
     const dispatch = useDispatch()
     const history = useHistory()
 
@@ -31,6 +31,7 @@ const Dropdown = ({ trackWeight, dataPoint, monthNames }) => {
 
     const deleteRequest = () => {
         dispatch(deleteEntry(Number(entryId)))
+        setDataPoint([])
     }
 
     return (

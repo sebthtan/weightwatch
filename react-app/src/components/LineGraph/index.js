@@ -190,8 +190,7 @@ const LineGraph = () => {
                         </LineChart>
                     </ResponsiveContainer>
                     {dataPoint.length > 0 && (
-
-                        <Dropdown trackWeight={trackWeight} dataPoint={dataPoint} monthNames={monthNames} />
+                        <Dropdown trackWeight={trackWeight} dataPoint={dataPoint} setDataPoint={setDataPoint} monthNames={monthNames} />
                     )}
 
                     {/* <div className='container flex items-center w-full justify-around text-gray-300'>
