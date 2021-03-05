@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { createEntry } from '../../store/entries'
+import './EntryForm.css'
 
 const EntryForm = ({ isModalOpen, setIsModalOpen }) => {
     const dispatch = useDispatch()
@@ -10,18 +11,28 @@ const EntryForm = ({ isModalOpen, setIsModalOpen }) => {
     const [benchPress, setBenchPress] = useState('')
     const [squat, setSquat] = useState('')
     const [deadlift, setDeadlift] = useState('')
+    const [errors, setErrors] = useState([])
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        if (!bodyWeight && !benchPress && !squat && !deadlift) return setErrors(['Cannot submit an empty entry.'])
+        if (isNaN(Number(bodyWeight)) || isNaN(Number(benchPress)) || isNaN(Number(squat)) || isNaN(Number(deadlift))) return setErrors(['Cannot submit an entry with non-numerical weights.'])
+        if (40 > Number.parseInt(bodyWeight) || Number.parseInt(bodyWeight) > 800 || Number.parseInt(benchPress) < 0 || Number.parseInt(squat) < 0 || Number.parseInt(deadlift) < 0) return setErrors(['Please enter a reasonable weight.'])
         dispatch(createEntry({ bodyWeight, benchPress, squat, deadlift }))
         history.push('/')
         setIsModalOpen(false)
     }
+
     return (
         <form
             className='container flex flex-col text-gray-300 bg-light p-16'
             onSubmit={handleSubmit}
         >
+            <div>
+                <ul>
+                    {errors.map((error, idx) => <li className='text-red-500' key={idx}>{error}</li>)}
+                </ul>
+            </div>
             <div className='container flex flex-col justify-center items-start'>
                 <label className='mx-1 my-3'>
                     Body Weight

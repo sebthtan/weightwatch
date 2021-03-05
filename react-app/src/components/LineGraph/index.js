@@ -152,7 +152,7 @@ const LineGraph = () => {
                         >
                             <XAxis dataKey="created_at" axisLine={false} tickLine={false} />
                             <YAxis domain={domain} dataKey={weightType} axisLine={false} tickLine={false} />
-                            <Line animationDuration={800} type="monotone" dataKey={weightType} stroke="#ea80fc" yAxisId={0} activeDot={{ stroke: 'darkblue' }} />
+                            <Line connectNulls={true} animationDuration={800} type="monotone" dataKey={weightType} stroke="#ea80fc" yAxisId={0} activeDot={{ stroke: 'darkblue' }} />
                             <CartesianGrid vertical={false} strokeDasharray='3' />
                             <Tooltip className='text-gray' />
                         </LineChart>
