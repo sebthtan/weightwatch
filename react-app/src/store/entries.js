@@ -1,6 +1,7 @@
 const GET_ENTRIES = 'entries/GET_ENTRIES'
 const NEW_ENTRY = 'entries/NEW_ENTRY'
 const DELETE_ENTRY = 'entries/DELETE_ENTRY'
+const REMOVE_ENTRIES = 'entries/REMOVE_ENTRIES'
 
 const getEntries = (entries) => ({
     type: GET_ENTRIES,
@@ -17,6 +18,10 @@ const deleteOneEntry = (entryId) => ({
     payload: entryId
 })
 
+const removeUserEntries = () => ({
+    type: REMOVE_ENTRIES,
+})
+
 export const getUserEntries = () => async dispatch => {
     const res = await fetch(`/api/users/entries`)
     const entries = await res.json()
@@ -28,16 +33,10 @@ export const createEntry = (entry) => async dispatch => {
     const { bodyWeight, benchPress, squat, deadlift } = entry
     const formData = new FormData()
     formData.append('body_weight', bodyWeight)
-    if (benchPress) {
-        formData.append('bench_press', benchPress)
-    }
-    if (squat) {
-        formData.append('squat', squat)
-    }
-    if (deadlift) {
-        formData.append('deadlift', deadlift)
-    }
-    const res = await fetch('/api/entries/new', {
+    formData.append('bench_press', benchPress)
+    formData.append('squat', squat)
+    formData.append('deadlift', deadlift)
+    const res = await fetch('/api/entries/', {
         method: 'POST',
         body: formData
     })
@@ -51,29 +50,60 @@ export const deleteEntry = (entryId) => async dispatch => {
         method: 'DELETE',
     })
     console.log('IN ACTION THUNK', entryId)
-    // const data = await res.json()
     dispatch(deleteOneEntry(entryId))
-    // return data
 }
 
-const initialState = []
+export const updateEntry = (entry) => async dispatch => {
+    const { entryId, bodyWeight, benchPress, squat, deadlift } = entry
+    const formData = new FormData()
+    formData.append('body_weight', bodyWeight)
+    formData.append('bench_press', benchPress)
+    formData.append('squat', squat)
+    formData.append('deadlift', deadlift)
+    try {
+        const res = await fetch(`/api/entries${entryId}`, {
+            method: 'PUT',
+            body: formData
+        })
+        const entry = res.json()
+        dispatch(newEntry(entry))
+        return entry
+    } catch (err) {
+        return err
+    }
+}
+
+export const logoutEntries = () => async dispatch => {
+    dispatch(removeUserEntries())
+}
+
+const initialState = {}
 
 const entriesReducer = (state = initialState, action) => {
     let newState
     switch (action.type) {
         case GET_ENTRIES:
-            newState = [...state, ...action.payload]
+            let entries = {}
+            action.payload.forEach(entry => {
+                entries[entry.id] = entry
+            })
+            newState = { ...state, ...entries }
             return newState
         case NEW_ENTRY:
-            newState = [...state, action.payload]
+            newState = { ...state, ['created']: action.payload }
             return newState
         case DELETE_ENTRY:
-            newState = [...state]
+            newState = { ...state }
+            delete newState[action.payload]
             // let found = newState.find(async entry => {
             //     await entry.id === action.payload
             // })
             // delete newState[newState.indexOf(found)]
-            return newState.filter(entry => entry.id !== action.payload)
+            // newState.filter(entry => entry.id !== action.payload)
+            return newState
+        case REMOVE_ENTRIES:
+            newState = {}
+            return newState
         default:
             return state
     }

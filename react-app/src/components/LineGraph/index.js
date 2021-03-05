@@ -20,21 +20,35 @@ const LineGraph = () => {
     const isSquat = trackWeight === 'Squat'
     const isDeadlift = trackWeight === 'Deadlift'
 
-    const forceAnimation = (key) => {
-        let data = []
-        for (let i = 0; i < entries.length; i++) {
-            let entry = entries[i]
+    const forceAnimation = (keyData) => {
+        let entriesArr = []
+        // for (let i = 0; i < entries.length; i++) {
+        for (let key in entries) {
+            let entry = entries[key]
             if (!entry) {
                 continue
             } else {
                 let obj = {}
-                obj[key] = entry[key]
+                obj[keyData] = entry[keyData]
                 obj['created_at'] = (new Date(entry.created_at).getTime() / 1000)
                 obj['id'] = entry.id
-                data.push(obj)
+                entriesArr.push(obj)
+                entriesArr.push(obj)
             }
         }
-        return data
+
+        return entriesArr.sort((obj1, obj2) => {
+            const key1 = obj1.created_at
+            const key2 = obj2.created_at
+
+            if (key1 < key2) {
+                return -1
+            } else if (key1 === key2) {
+                return 0
+            } else {
+                return 1
+            }
+        })
     }
 
     const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
@@ -120,7 +134,7 @@ const LineGraph = () => {
     }
 
     return (
-        entries.length > 0 && (
+        entries && (
             <div className='container flex justify-center min-w-full p-8'>
                 <div className='m-0 container w-3/5 p-4 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl shadow-md border-2' style={{ borderColor: '#373737' }}>
                     <div className='container flex justify-center items-center self-end w-8 h-8 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30'>

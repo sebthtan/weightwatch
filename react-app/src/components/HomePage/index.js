@@ -13,7 +13,7 @@ const HomePage = () => {
     }, [dispatch])
 
     return (
-        user && entries.length > 0 && (
+        user && entries && (
             <div>
                 <div>
                     <h2 className='text-white'>yes</h2>
