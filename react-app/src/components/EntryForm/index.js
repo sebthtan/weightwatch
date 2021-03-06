@@ -11,14 +11,16 @@ const EntryForm = ({ isModalOpen, setIsModalOpen }) => {
     const [benchPress, setBenchPress] = useState('')
     const [squat, setSquat] = useState('')
     const [deadlift, setDeadlift] = useState('')
+    const [createdAt, setCreatedAt] = useState('')
     const [errors, setErrors] = useState([])
 
     const handleSubmit = (e) => {
         e.preventDefault()
         if (!bodyWeight && !benchPress && !squat && !deadlift) return setErrors(['Cannot submit an empty entry.'])
-        if (isNaN(Number(bodyWeight)) || isNaN(Number(benchPress)) || isNaN(Number(squat)) || isNaN(Number(deadlift))) return setErrors(['Cannot submit an entry with non-numerical weights.'])
-        if (40 > Number.parseInt(bodyWeight) || Number.parseInt(bodyWeight) > 800 || Number.parseInt(benchPress) < 0 || Number.parseInt(squat) < 0 || Number.parseInt(deadlift) < 0) return setErrors(['Please enter a reasonable weight.'])
-        dispatch(createEntry({ bodyWeight, benchPress, squat, deadlift }))
+        if (!createdAt)
+            if (isNaN(Number(bodyWeight)) || isNaN(Number(benchPress)) || isNaN(Number(squat)) || isNaN(Number(deadlift))) return setErrors(['Cannot submit an entry with non-numerical weights.'])
+        if (80 > Number.parseInt(bodyWeight) || Number.parseInt(bodyWeight) > 800 || Number.parseInt(benchPress) < 0 || Number.parseInt(squat) < 0 || Number.parseInt(deadlift) < 0) return setErrors(['Please enter a reasonable weight.'])
+        dispatch(createEntry({ bodyWeight, benchPress, squat, deadlift, createdAt }))
         setIsModalOpen(false)
     }
 
@@ -81,6 +83,19 @@ const EntryForm = ({ isModalOpen, setIsModalOpen }) => {
                         type='text'
                         onChange={e => setDeadlift(e.target.value)}
                         value={deadlift}>
+                    </input>
+                </div>
+            </div>
+            <div className='container flex flex-col justify-center items-start'>
+                <label className='mx-1 my-3'>
+                    Date
+                </label>
+                <div className='container flex w-full '>
+                    <input
+                        className='bg-input-light border-2 custom-border-color w-full field-focus p-1'
+                        type='date'
+                        onChange={e => setCreatedAt(e.target.value)}
+                        value={createdAt}>
                     </input>
                 </div>
             </div>

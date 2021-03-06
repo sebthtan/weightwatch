@@ -22,6 +22,15 @@ const LineGraph = () => {
     const isSquat = trackWeight === 'Squat'
     const isDeadlift = trackWeight === 'Deadlift'
 
+    const checkObj = (obj) => {
+        for (let key in obj) {
+            if (key) {
+                return true
+            }
+        }
+        return false
+    }
+
     const forceAnimation = (keyData) => {
         let entriesArr = []
         // for (let i = 0; i < entries.length; i++) {
@@ -96,13 +105,13 @@ const LineGraph = () => {
         domain = [80, 'auto']
     } else if (trackWeight === 'Bench Press') {
         weightType = 'bench_press'
-        domain = [45, 'dataMax + 60']
+        domain = [45, 'dataMax + 10']
     } else if (trackWeight === 'Squat') {
         weightType = 'squat'
-        domain = [45, 'dataMax + 60']
+        domain = [45, 'dataMax + 10']
     } else if (trackWeight === 'Deadlift') {
         weightType = 'deadlift'
-        domain = [45, 'dataMax + 60']
+        domain = [45, 'dataMax + 10']
     }
 
     const lbs = <span style={{ color: 'rgb(234, 128, 252, 0.3' }}>(lbs)</span>
@@ -184,28 +193,34 @@ const LineGraph = () => {
                             {isDeadlift ? lbs : <></>}
                         </div>
                     </div>
-                    <ResponsiveContainer width='90%' height={300}>
-                        <LineChart
-                            width={800}
-                            height={300}
-                            data={forceAnimation(weightType)}
-                        >
-                            <XAxis type='number' dataKey="created_at" axisLine={false} tickLine={false} domain={["dataMin", "dataMax"]}
-                                tickFormatter={(unixTime) => {
+                    {checkObj(entries) ? (
+                        <ResponsiveContainer width='90%' height={300}>
+                            <LineChart
+                                width={800}
+                                height={300}
+                                data={forceAnimation(weightType)}
+                            >
+                                <XAxis type='number' dataKey="created_at" axisLine={false} tickLine={false} domain={["dataMin", "dataMax"]}
+                                    tickFormatter={(unixTime) => {
+                                        let dateObj = new Date(unixTime * 1000)
+                                        return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
+                                    }}
+                                />
+                                <YAxis domain={domain} dataKey={weightType} axisLine={false} tickLine={false} />
+                                <Line connectNulls={true} animationDuration={800} type="monotone" dataKey={weightType} stroke="#ea80fc" yAxisId={0} activeDot={{ stroke: '#fcf480', onClick: clickedDot }} />
+                                <CartesianGrid vertical={false} strokeDasharray='3' />
+                                {/* {!isDropdownOpen && */}
+                                <Tooltip className='text-gray' labelFormatter={(unixTime) => {
                                     let dateObj = new Date(unixTime * 1000)
                                     return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
-                                }}
-                            />
-                            <YAxis domain={domain} dataKey={weightType} axisLine={false} tickLine={false} />
-                            <Line connectNulls={true} animationDuration={800} type="monotone" dataKey={weightType} stroke="#ea80fc" yAxisId={0} activeDot={{ stroke: '#fcf480', onClick: clickedDot }} />
-                            <CartesianGrid vertical={false} strokeDasharray='3' />
-                            {/* {!isDropdownOpen && */}
-                            <Tooltip className='text-gray' labelFormatter={(unixTime) => {
-                                let dateObj = new Date(unixTime * 1000)
-                                return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
-                            }} />
-                        </LineChart>
-                    </ResponsiveContainer>
+                                }} />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    ) : (
+                        <div>
+                            <h1 className='text-gray-300 text-xl'>No entries recorded.</h1>
+                        </div>
+                    )}
                     {dataPoint.length > 0 && (
                         <Dropdown
                             trackWeight={trackWeight}

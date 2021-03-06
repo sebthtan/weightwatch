@@ -20,7 +20,8 @@ def create_entry():
             body_weight=form.data['body_weight'],
             bench_press=form.data['bench_press'],
             squat=form.data['squat'],
-            deadlift=form.data['deadlift']
+            deadlift=form.data['deadlift'],
+            created_at=form.data['created_at'],
         )
         db.session.add(entry)
         db.session.commit()
@@ -46,18 +47,16 @@ def update_entry(entry_id):
             form = EntryForm()
             form['csrf_token'].data = request.cookies['csrf_token']
             if form.validate_on_submit():
-                entry.user_id = user.id
-                entry.body_weight = form.data['body_weight']
-                entry.bench_press = form.data['bench_press']
-                entry.squat = form.data['squat']
-                entry.deadlift = form.data['deadlift']
-                # entry = Entry(
-                #     user_id=user.id,
-                #     body_weight=form.data['body_weight'],
-                #     bench_press=form.data['bench_press'],
-                #     squat=form.data['squat'],
-                #     deadlift=form.data['deadlift']
-                # )
+                if form.data['body_weight']:
+                    entry.body_weight = form.data['body_weight']
+                if form.data['bench_press']:
+                    entry.bench_press = form.data['bench_press']
+                if form.data['squat']:
+                    entry.squat = form.data['squat']
+                if form.data['deadlift']:
+                    entry.deadlift = form.data['deadlift']
+                if form.data['created_at']:
+                    entry.created_at = form.data['created_at']
                 db.session.add(entry)
                 db.session.commit()
                 return entry.to_dict()

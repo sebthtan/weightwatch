@@ -36,12 +36,13 @@ export const getUserEntries = () => async dispatch => {
 }
 
 export const createEntry = (entry) => async dispatch => {
-    const { bodyWeight, benchPress, squat, deadlift } = entry
+    const { bodyWeight, benchPress, squat, deadlift, createdAt } = entry
     const formData = new FormData()
     formData.append('body_weight', bodyWeight)
     formData.append('bench_press', benchPress)
     formData.append('squat', squat)
     formData.append('deadlift', deadlift)
+    formData.append('created_at', createdAt)
     const res = await fetch('/api/entries/', {
         method: 'POST',
         body: formData
@@ -60,12 +61,13 @@ export const deleteEntry = (entryId) => async dispatch => {
 }
 
 export const updateEntry = (entry) => async dispatch => {
-    const { entryId, entryBodyWeight, entryBenchPress, entrySquat, entryDeadlift } = entry
+    const { entryId, entryBodyWeight, entryBenchPress, entrySquat, entryDeadlift, entryCreatedAt } = entry
     const formData = new FormData()
     formData.append('body_weight', entryBodyWeight)
     formData.append('bench_press', entryBenchPress)
     formData.append('squat', entrySquat)
     formData.append('deadlift', entryDeadlift)
+    formData.append('created_at', entryCreatedAt)
     try {
         const res = await fetch(`/api/entries/${entryId}`, {
             method: 'PUT',
