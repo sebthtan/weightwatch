@@ -28,7 +28,7 @@ def create_entry():
     return {'errors': validation_errors_to_error_messages(form.errors)}
 
 
-@entry_routes.route('/<int:entry_id>', methods=['DELETE', 'PUT'])
+@entry_routes.route('/<int:entry_id>', methods=['PUT', 'DELETE'])
 @login_required
 def update_entry(entry_id):
     entry = Entry.query.get(entry_id)
@@ -46,13 +46,19 @@ def update_entry(entry_id):
             form = EntryForm()
             form['csrf_token'].data = request.cookies['csrf_token']
             if form.validate_on_submit():
-                entry = Entry(
-                    user_id=user.id,
-                    body_weight=form.data['body_weight'],
-                    bench_press=form.data['bench_press'],
-                    squat=form.data['squat'],
-                    deadlift=form.data['deadlift']
-                )
+                entry.user_id = user.id
+                entry.body_weight = form.data['body_weight']
+                entry.bench_press = form.data['bench_press']
+                entry.squat = form.data['squat']
+                entry.deadlift = form.data['deadlift']
+                # entry = Entry(
+                #     user_id=user.id,
+                #     body_weight=form.data['body_weight'],
+                #     bench_press=form.data['bench_press'],
+                #     squat=form.data['squat'],
+                #     deadlift=form.data['deadlift']
+                # )
+                db.session.add(entry)
                 db.session.commit()
                 return entry.to_dict()
             return {'errors': validation_errors_to_error_messages(form.errors)}

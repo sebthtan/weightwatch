@@ -19,7 +19,6 @@ const EntryForm = ({ isModalOpen, setIsModalOpen }) => {
         if (isNaN(Number(bodyWeight)) || isNaN(Number(benchPress)) || isNaN(Number(squat)) || isNaN(Number(deadlift))) return setErrors(['Cannot submit an entry with non-numerical weights.'])
         if (40 > Number.parseInt(bodyWeight) || Number.parseInt(bodyWeight) > 800 || Number.parseInt(benchPress) < 0 || Number.parseInt(squat) < 0 || Number.parseInt(deadlift) < 0) return setErrors(['Please enter a reasonable weight.'])
         dispatch(createEntry({ bodyWeight, benchPress, squat, deadlift }))
-        history.push('/')
         setIsModalOpen(false)
     }
 
@@ -86,7 +85,7 @@ const EntryForm = ({ isModalOpen, setIsModalOpen }) => {
                 </div>
             </div>
             <div className='container flex justify-end items-center mt-10'>
-                <button className='flex justify-center items-center w-28 h-8 border-2 custom-border-color bg-input-light' style={{ color: '#ea80fc' }} type='submit'>
+                <button className='flex justify-center items-center w-28 h-8 border-2 custom-border-color bg-input-light field-focus' style={{ color: '#ea80fc' }} type='submit'>
                     <h2 >
                         Add Entry
                                     </h2>

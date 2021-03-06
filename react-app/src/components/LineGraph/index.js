@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import './LineGraph.css'
-import { AddOutlined } from '@material-ui/icons'
+import { AddCircle } from '@material-ui/icons'
 import Modal from 'react-modal'
 import EntryForm from '../EntryForm'
 import Dropdown from './Dropdown'
@@ -15,6 +15,8 @@ const LineGraph = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [trackWeight, setTrackWeight] = useState('Body Weight')
     const [dataPoint, setDataPoint] = useState([])
+    const [isEditFormOpen, setIsEditFormOpen] = useState(false)
+    const [errors, setErrors] = useState([])
     const isBodyWeight = trackWeight === 'Body Weight'
     const isBench = trackWeight === 'Bench Press'
     const isSquat = trackWeight === 'Squat'
@@ -51,8 +53,8 @@ const LineGraph = () => {
         })
     }
 
-    const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-        "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
     ];
 
     const openModal = () => {
@@ -127,19 +129,20 @@ const LineGraph = () => {
     }
 
     const clickedDot = (e, payload) => {
+        setErrors([])
+        // setIsEditFormOpen(false)
         setDataPoint(Object.keys(payload).map(key => {
             return { [key]: payload[key] }
         }))
-        console.log(payload)
     }
 
     return (
         entries && (
             <div className='container flex justify-center min-w-full p-8'>
                 <div className='m-0 container w-3/5 p-4 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl shadow-md border-2' style={{ borderColor: '#373737' }}>
-                    <div className='container flex justify-center items-center self-end w-8 h-8 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30'>
+                    <div className='container flex justify-center items-center self-end w-8 h-8 rounded-full'>
                         <button onClick={openModal} className='w-6 h-6 flex justify-center items-center'>
-                            <AddOutlined className='text-gray-300' style={{ color: '#fcf480' }} />
+                            <AddCircle className='text-gray-300' style={{ color: '#fcf480' }} />
                         </button>
                     </div>
                     <Modal className='absolute' isOpen={isModalOpen} onRequestClose={closeModal} contentLabel='test' style={customStyles}>
@@ -147,7 +150,7 @@ const LineGraph = () => {
                             <EntryForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
                         </div>
                     </Modal>
-                    <div className='container flex justify-between items-center pb-8 px-4'>
+                    <div className='container flex justify-between items-center pb-8'>
                         <div className='container flex flex-col justify-center items-center'>
                             <button className='flex justify-center items-center focus:outline-none' onClick={changeToBodyWeight}>
                                 <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isBodyWeight ? { fontWeight: '750', color: '#ea80fc' } : {}}>
@@ -204,7 +207,16 @@ const LineGraph = () => {
                         </LineChart>
                     </ResponsiveContainer>
                     {dataPoint.length > 0 && (
-                        <Dropdown trackWeight={trackWeight} dataPoint={dataPoint} setDataPoint={setDataPoint} monthNames={monthNames} />
+                        <Dropdown
+                            trackWeight={trackWeight}
+                            dataPoint={dataPoint}
+                            setDataPoint={setDataPoint}
+                            monthNames={monthNames}
+                            isEditFormOpen={isEditFormOpen}
+                            setIsEditFormOpen={setIsEditFormOpen}
+                            errors={errors}
+                            setErrors={setErrors}
+                        />
                     )}
 
                     {/* <div className='container flex items-center w-full justify-around text-gray-300'>

@@ -2,6 +2,7 @@ const GET_ENTRIES = 'entries/GET_ENTRIES'
 const NEW_ENTRY = 'entries/NEW_ENTRY'
 const DELETE_ENTRY = 'entries/DELETE_ENTRY'
 const REMOVE_ENTRIES = 'entries/REMOVE_ENTRIES'
+const UPDATE_ENTRIES = 'entries/UPDATE_ENTRIES'
 
 const getEntries = (entries) => ({
     type: GET_ENTRIES,
@@ -20,6 +21,11 @@ const deleteOneEntry = (entryId) => ({
 
 const removeUserEntries = () => ({
     type: REMOVE_ENTRIES,
+})
+
+const updatedEntry = (entry) => ({
+    type: UPDATE_ENTRIES,
+    payload: entry
 })
 
 export const getUserEntries = () => async dispatch => {
@@ -54,19 +60,19 @@ export const deleteEntry = (entryId) => async dispatch => {
 }
 
 export const updateEntry = (entry) => async dispatch => {
-    const { entryId, bodyWeight, benchPress, squat, deadlift } = entry
+    const { entryId, entryBodyWeight, entryBenchPress, entrySquat, entryDeadlift } = entry
     const formData = new FormData()
-    formData.append('body_weight', bodyWeight)
-    formData.append('bench_press', benchPress)
-    formData.append('squat', squat)
-    formData.append('deadlift', deadlift)
+    formData.append('body_weight', entryBodyWeight)
+    formData.append('bench_press', entryBenchPress)
+    formData.append('squat', entrySquat)
+    formData.append('deadlift', entryDeadlift)
     try {
-        const res = await fetch(`/api/entries${entryId}`, {
+        const res = await fetch(`/api/entries/${entryId}`, {
             method: 'PUT',
             body: formData
         })
-        const entry = res.json()
-        dispatch(newEntry(entry))
+        const entry = await res.json()
+        dispatch(updatedEntry(entry))
         return entry
     } catch (err) {
         return err
@@ -90,11 +96,12 @@ const entriesReducer = (state = initialState, action) => {
             newState = { ...state, ...entries }
             return newState
         case NEW_ENTRY:
-            newState = { ...state, ['created']: action.payload }
+            newState = { ...state, 'created': action.payload }
             return newState
         case DELETE_ENTRY:
             newState = { ...state }
             delete newState[action.payload]
+            delete newState['created']
             // let found = newState.find(async entry => {
             //     await entry.id === action.payload
             // })
@@ -103,6 +110,9 @@ const entriesReducer = (state = initialState, action) => {
             return newState
         case REMOVE_ENTRIES:
             newState = {}
+            return newState
+        case UPDATE_ENTRIES:
+            newState = { ...state, [action.payload.id]: action.payload }
             return newState
         default:
             return state
