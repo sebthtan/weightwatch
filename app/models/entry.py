@@ -13,9 +13,9 @@ class Entry(db.Model):
     squat = db.Column(db.Integer)
     deadlift = db.Column(db.Integer)
     created_at = db.Column(
-        db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+        db.Date, default=datetime.date.today(), nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+        db.Date, default=datetime.date.today(), nullable=False)
 
     user = db.relationship('User', back_populates='entries')
 

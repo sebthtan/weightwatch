@@ -30,7 +30,7 @@ const Dropdown = ({ trackWeight, dataPoint, setDataPoint, monthNames, isEditForm
         squat = payload.squat
         deadlift = payload.deadlift
         entryId = payload.id
-        let dateObj = new Date(payload.created_at * 1000)
+        let dateObj = new Date((payload.created_at + 86400) * 1000)
         createdAt = `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
         selectedEntry = entries[entryId]
     }
@@ -209,8 +209,5 @@ const Dropdown = ({ trackWeight, dataPoint, setDataPoint, monthNames, isEditForm
         </>
     )
 }
-
-// let dateObj = new Date(unixTime * 1000)
-// return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
 
 export default Dropdown

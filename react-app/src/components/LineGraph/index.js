@@ -41,7 +41,7 @@ const LineGraph = () => {
             } else {
                 let obj = {}
                 obj[keyData] = entry[keyData]
-                obj['created_at'] = (new Date(entry.created_at).getTime() / 1000)
+                obj['created_at'] = ((new Date(entry.created_at).getTime() + 86400) / 1000)
                 obj['id'] = entry.id
                 entriesArr.push(obj)
                 entriesArr.push(obj)
@@ -202,7 +202,7 @@ const LineGraph = () => {
                             >
                                 <XAxis type='number' dataKey="created_at" axisLine={false} tickLine={false} domain={["dataMin", "dataMax"]}
                                     tickFormatter={(unixTime) => {
-                                        let dateObj = new Date(unixTime * 1000)
+                                        let dateObj = new Date((unixTime + 86400) * 1000)
                                         return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
                                     }}
                                 />
@@ -211,7 +211,7 @@ const LineGraph = () => {
                                 <CartesianGrid vertical={false} strokeDasharray='3' />
                                 {/* {!isDropdownOpen && */}
                                 <Tooltip className='text-gray' labelFormatter={(unixTime) => {
-                                    let dateObj = new Date(unixTime * 1000)
+                                    let dateObj = new Date((unixTime + 86400) * 1000)
                                     return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
                                 }} />
                             </LineChart>
