@@ -13,13 +13,15 @@ const HomePage = () => {
     }, [dispatch])
 
     return (
-        user && entries.length > 0 && (
-            <div>
-                <div>
-                    <h2 className='text-white'>yes</h2>
+        user && (
+            <>
+                <div className='w-screen flex flex-col items-center'>
+                    <div className='w-7/12 pt-10 flex justify-start items-center'>
+                        <h1 className='text-gray-300 font-bold text-5xl'>Dashboard</h1>
+                    </div>
+                    <LineGraph />
                 </div>
-                <LineGraph />
-            </div>
+            </>
         )
     )
 }

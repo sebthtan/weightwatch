@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import Transition from '../Transition'
+import { InsertChart, FitnessCenter, DateRange, AccessAlarm } from '@material-ui/icons'
 
 const SideBar = ({ isOpen, setIsOpen }) => {
-
 
     useEffect(() => {
         if (!isOpen) return;
@@ -27,38 +27,42 @@ const SideBar = ({ isOpen, setIsOpen }) => {
             leaveTo='-ml-64'
         >
             <aside className='fixed w-64 min-h-screen flex flex-col z-20' style={{ backgroundColor: '#414141' }}>
-                <div className='flex-grow text-white'>
+                <div className='flex-grow text-gray-300'>
                     <nav>
-                        <ul>
+                        <div>
                             <NavLink exact to='/'>
-                                <li className='p-4'>
-                                    <span>
+                                <div className='p-4 flex items-center'>
+                                    <InsertChart />
+                                    <span className='font-medium ml-2'>
                                         Dashboard
                                     </span>
-                                </li>
+                                </div>
                             </NavLink>
                             <NavLink to='/workouts'>
-                                <li className='p-4'>
-                                    <span>
+                                <div className='p-4 flex items-center'>
+                                    <FitnessCenter />
+                                    <span className='font-medium ml-2'>
                                         Workouts
                                 </span>
-                                </li>
+                                </div>
                             </NavLink>
                             <NavLink to='/schedule'>
-                                <li className='p-4'>
-                                    <span>
+                                <div className='p-4 flex items-center'>
+                                    <DateRange />
+                                    <span className='font-medium ml-2'>
                                         Schedule
                                 </span>
-                                </li>
+                                </div>
                             </NavLink>
                             <NavLink to='/timer'>
-                                <li className='p-4'>
-                                    <span>
+                                <div className='p-4 flex items-center'>
+                                    <AccessAlarm />
+                                    <span className='font-medium ml-2'>
                                         Timer
                                 </span>
-                                </li>
+                                </div>
                             </NavLink>
-                        </ul>
+                        </div>
                     </nav>
                 </div>
             </aside>

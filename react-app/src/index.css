@@ -56,3 +56,8 @@ button:focus {
 .font-bold-hover:hover {
     font-weight: 400;
 }
+
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 50%;
+}

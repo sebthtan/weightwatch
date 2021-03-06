@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import './LineGraph.css'
-import { AddOutlined } from '@material-ui/icons'
+import { AddCircle } from '@material-ui/icons'
 import Modal from 'react-modal'
 import EntryForm from '../EntryForm'
 import Dropdown from './Dropdown'
@@ -15,30 +15,55 @@ const LineGraph = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [trackWeight, setTrackWeight] = useState('Body Weight')
     const [dataPoint, setDataPoint] = useState([])
+    const [isEditFormOpen, setIsEditFormOpen] = useState(false)
+    const [errors, setErrors] = useState([])
     const isBodyWeight = trackWeight === 'Body Weight'
     const isBench = trackWeight === 'Bench Press'
     const isSquat = trackWeight === 'Squat'
     const isDeadlift = trackWeight === 'Deadlift'
 
-    const forceAnimation = (key) => {
-        let data = []
-        for (let i = 0; i < entries.length; i++) {
-            let entry = entries[i]
+    const checkObj = (obj) => {
+        for (let key in obj) {
+            if (key) {
+                return true
+            }
+        }
+        return false
+    }
+
+    const forceAnimation = (keyData) => {
+        let entriesArr = []
+        // for (let i = 0; i < entries.length; i++) {
+        for (let key in entries) {
+            let entry = entries[key]
             if (!entry) {
                 continue
             } else {
                 let obj = {}
-                obj[key] = entry[key]
-                obj['created_at'] = (new Date(entry.created_at).getTime() / 1000)
+                obj[keyData] = entry[keyData]
+                obj['created_at'] = ((new Date(entry.created_at).getTime() + 86400) / 1000)
                 obj['id'] = entry.id
-                data.push(obj)
+                entriesArr.push(obj)
+                entriesArr.push(obj)
             }
         }
-        return data
+
+        return entriesArr.sort((obj1, obj2) => {
+            const key1 = obj1.created_at
+            const key2 = obj2.created_at
+
+            if (key1 < key2) {
+                return -1
+            } else if (key1 === key2) {
+                return 0
+            } else {
+                return 1
+            }
+        })
     }
 
-    const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-        "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
     ];
 
     const openModal = () => {
@@ -80,13 +105,13 @@ const LineGraph = () => {
         domain = [80, 'auto']
     } else if (trackWeight === 'Bench Press') {
         weightType = 'bench_press'
-        domain = [45, 'dataMax + 60']
+        domain = [45, 'dataMax + 10']
     } else if (trackWeight === 'Squat') {
         weightType = 'squat'
-        domain = [45, 'dataMax + 60']
+        domain = [45, 'dataMax + 10']
     } else if (trackWeight === 'Deadlift') {
         weightType = 'deadlift'
-        domain = [45, 'dataMax + 60']
+        domain = [45, 'dataMax + 10']
     }
 
     const lbs = <span style={{ color: 'rgb(234, 128, 252, 0.3' }}>(lbs)</span>
@@ -113,19 +138,20 @@ const LineGraph = () => {
     }
 
     const clickedDot = (e, payload) => {
+        setErrors([])
+        // setIsEditFormOpen(false)
         setDataPoint(Object.keys(payload).map(key => {
             return { [key]: payload[key] }
         }))
-        console.log(payload)
     }
 
     return (
-        entries.length > 0 && (
+        entries && (
             <div className='container flex justify-center min-w-full p-8'>
                 <div className='m-0 container w-3/5 p-4 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl shadow-md border-2' style={{ borderColor: '#373737' }}>
-                    <div className='container flex justify-center items-center self-end w-8 h-8 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30'>
+                    <div className='container flex justify-center items-center self-end w-8 h-8 rounded-full'>
                         <button onClick={openModal} className='w-6 h-6 flex justify-center items-center'>
-                            <AddOutlined className='text-gray-300' style={{ color: '#fcf480' }} />
+                            <AddCircle className='text-gray-300' style={{ color: '#fcf480' }} />
                         </button>
                     </div>
                     <Modal className='absolute' isOpen={isModalOpen} onRequestClose={closeModal} contentLabel='test' style={customStyles}>
@@ -133,7 +159,7 @@ const LineGraph = () => {
                             <EntryForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
                         </div>
                     </Modal>
-                    <div className='container flex justify-between items-center pb-8 px-4'>
+                    <div className='container flex justify-between items-center pb-8'>
                         <div className='container flex flex-col justify-center items-center'>
                             <button className='flex justify-center items-center focus:outline-none' onClick={changeToBodyWeight}>
                                 <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isBodyWeight ? { fontWeight: '750', color: '#ea80fc' } : {}}>
@@ -167,31 +193,45 @@ const LineGraph = () => {
                             {isDeadlift ? lbs : <></>}
                         </div>
                     </div>
-                    <ResponsiveContainer width='90%' height={300}>
-                        <LineChart
-                            width={800}
-                            height={300}
-                            data={forceAnimation(weightType)}
-                        >
-                            <XAxis type='number' dataKey="created_at" axisLine={false} tickLine={false} domain={["dataMin", "dataMax"]}
-                                tickFormatter={(unixTime) => {
-                                    let dateObj = new Date(unixTime * 1000)
+                    {checkObj(entries) ? (
+                        <ResponsiveContainer width='90%' height={300}>
+                            <LineChart
+                                width={800}
+                                height={300}
+                                data={forceAnimation(weightType)}
+                            >
+                                <XAxis type='number' dataKey="created_at" axisLine={false} tickLine={false} domain={["dataMin", "dataMax"]}
+                                    tickFormatter={(unixTime) => {
+                                        let dateObj = new Date((unixTime + 86400) * 1000)
+                                        return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
+                                    }}
+                                />
+                                <YAxis domain={domain} dataKey={weightType} axisLine={false} tickLine={false} />
+                                <Line connectNulls={true} animationDuration={800} type="monotone" dataKey={weightType} stroke="#ea80fc" yAxisId={0} activeDot={{ stroke: '#fcf480', onClick: clickedDot }} />
+                                <CartesianGrid vertical={false} strokeDasharray='3' />
+                                {/* {!isDropdownOpen && */}
+                                <Tooltip className='text-gray' labelFormatter={(unixTime) => {
+                                    let dateObj = new Date((unixTime + 86400) * 1000)
                                     return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
-                                }}
-                            />
-                            <YAxis domain={domain} dataKey={weightType} axisLine={false} tickLine={false} />
-                            <Line connectNulls={true} animationDuration={800} type="monotone" dataKey={weightType} stroke="#ea80fc" yAxisId={0} activeDot={{ stroke: '#fcf480', onClick: clickedDot }} />
-                            <CartesianGrid vertical={false} strokeDasharray='3' />
-                            {/* {!isDropdownOpen && */}
-                            <Tooltip className='text-gray' labelFormatter={(unixTime) => {
-                                let dateObj = new Date(unixTime * 1000)
-                                return `${monthNames[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getUTCFullYear()}`
-                            }} />
-                        </LineChart>
-                    </ResponsiveContainer>
+                                }} />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    ) : (
+                        <div>
+                            <h1 className='text-gray-300 text-xl'>No entries recorded.</h1>
+                        </div>
+                    )}
                     {dataPoint.length > 0 && (
-
-                        <Dropdown trackWeight={trackWeight} dataPoint={dataPoint} monthNames={monthNames} />
+                        <Dropdown
+                            trackWeight={trackWeight}
+                            dataPoint={dataPoint}
+                            setDataPoint={setDataPoint}
+                            monthNames={monthNames}
+                            isEditFormOpen={isEditFormOpen}
+                            setIsEditFormOpen={setIsEditFormOpen}
+                            errors={errors}
+                            setErrors={setErrors}
+                        />
                     )}
 
                     {/* <div className='container flex items-center w-full justify-around text-gray-300'>
