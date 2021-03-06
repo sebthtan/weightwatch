@@ -96,12 +96,12 @@ const entriesReducer = (state = initialState, action) => {
             newState = { ...state, ...entries }
             return newState
         case NEW_ENTRY:
-            newState = { ...state, 'created': action.payload }
+            newState = { ...state, [action.payload.id]: action.payload }
             return newState
         case DELETE_ENTRY:
             newState = { ...state }
             delete newState[action.payload]
-            delete newState['created']
+            // delete newState['created']
             // let found = newState.find(async entry => {
             //     await entry.id === action.payload
             // })
