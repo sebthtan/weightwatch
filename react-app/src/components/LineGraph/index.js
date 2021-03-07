@@ -32,7 +32,7 @@ const LineGraph = () => {
 
     const forceAnimation = (keyData) => {
         let entriesArr = []
-        // for (let i = 0; i < entries.length; i++) {
+
         for (let key in entries) {
             let entry = entries[key]
             if (!entry) {

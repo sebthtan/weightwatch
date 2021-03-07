@@ -39,10 +39,20 @@ def get_workouts(id):
         'workouts').joinedload('exercises').joinedload('exercise')).get(id)
     res = []
     exercises = []
+
     for workout in user.workouts:
         obj = workout.to_dict()
         obj['exercises'] = exercises
         res.append(obj)
-        for exercise in workout.exercises:
-            exercises.append(exercise.exercise.to_dict())
+
+        for w_e in workout.exercises:
+            exercise = w_e.exercise
+            exercise_dict = exercise.to_dict()
+            w_e_dict = w_e.to_dict()
+
+            exercise_dict['sets'] = w_e_dict['sets']
+            exercise_dict['repetitions'] = w_e_dict['repetitions']
+
+            exercises.append(exercise_dict)
+
     return jsonify(res)
