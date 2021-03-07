@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import './LineGraph.css'
 import { AddCircle } from '@material-ui/icons'
 import Modal from 'react-modal'
@@ -10,7 +10,6 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 Modal.setAppElement('#root')
 
 const LineGraph = () => {
-    const dispatch = useDispatch()
     const entries = useSelector(state => state.entries)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [trackWeight, setTrackWeight] = useState('Body Weight')

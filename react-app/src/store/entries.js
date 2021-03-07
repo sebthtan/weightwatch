@@ -53,7 +53,7 @@ export const createEntry = (entry) => async dispatch => {
 }
 
 export const deleteEntry = (entryId) => async dispatch => {
-    const res = await fetch(`/api/entries/${entryId}`, {
+    await fetch(`/api/entries/${entryId}`, {
         method: 'DELETE',
     })
     console.log('IN ACTION THUNK', entryId)

@@ -4,6 +4,7 @@ from app.models import User, Entry, db
 from app.forms import EntryForm
 from app.helpers import validation_errors_to_error_messages
 
+
 entry_routes = Blueprint('entries', __name__)
 
 

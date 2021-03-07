@@ -7,6 +7,7 @@ import HomePage from './components/HomePage'
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import UsersList from "./components/UsersList";
 import User from "./components/User";
+import WorkoutsPage from './components/WorkoutsPage'
 import { authenticate } from "./services/auth";
 import { useDispatch } from "react-redux";
 import { addUser } from "./store/session";
@@ -50,6 +51,12 @@ function App() {
           <NavBar setAuthenticated={setAuthenticated} />
           <div className='content'>
             <User />
+          </div>
+        </ProtectedRoute>
+        <ProtectedRoute path='/workouts' exact={true} authenticated={authenticated}>
+          <NavBar setAuthenticated={setAuthenticated} />
+          <div className='content'>
+            <WorkoutsPage />
           </div>
         </ProtectedRoute>
         <ProtectedRoute path="/" exact={true} authenticated={authenticated}>
