@@ -101,7 +101,7 @@ const EntryForm = ({ isModalOpen, setIsModalOpen }) => {
                 <button className='flex justify-center items-center w-28 h-8 border-2 custom-border-color bg-input-light field-focus' style={{ color: '#ea80fc' }} type='submit'>
                     <h2 >
                         Add Entry
-                                    </h2>
+                    </h2>
                 </button>
             </div>
         </form>
