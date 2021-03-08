@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import { createEntry } from '../../store/entries'
 import './EntryForm.css'
 
 const EntryForm = ({ isModalOpen, setIsModalOpen }) => {
     const dispatch = useDispatch()
-    const history = useHistory()
     const [bodyWeight, setBodyWeight] = useState('')
     const [benchPress, setBenchPress] = useState('')
     const [squat, setSquat] = useState('')

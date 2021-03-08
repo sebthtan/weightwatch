@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import { deleteEntry, updateEntry } from '../../store/entries'
 import { BarChart, Delete, Edit, FitnessCenter, Event, Cancel, Save } from '@material-ui/icons'
 
 const Dropdown = ({ trackWeight, dataPoint, setDataPoint, monthNames, isEditFormOpen, setIsEditFormOpen, errors, setErrors }) => {
     const dispatch = useDispatch()
-    const history = useHistory()
     const [entryBodyWeight, setEntryBodyWeight] = useState('')
     const [entryBenchPress, setEntryBenchPress] = useState('')
     const [entrySquat, setEntrySquat] = useState('')

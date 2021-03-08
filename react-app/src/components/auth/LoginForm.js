@@ -45,34 +45,44 @@ const LoginForm = ({ authenticated, setAuthenticated }) => {
   }
 
   return (
-    <form onSubmit={onLogin}>
-      <div>
-        {errors.map((error) => (
-          <div>{error}</div>
-        ))}
-      </div>
-      <div>
-        <label htmlFor="email">Email</label>
-        <input
-          name="email"
-          type="text"
-          placeholder="Email"
-          value={email}
-          onChange={updateEmail}
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Password</label>
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={updatePassword}
-        />
-        <button type="submit">Login</button>
-      </div>
-    </form>
+    <div className='flex container justify-center items-center text-gray-300 h-full'>
+      <form onSubmit={onLogin} className='absolute bg-light top-1/3 flex flex-col w-1/4 p-16'>
+        <div>
+          {errors.map((error) => (
+            <div>{error}</div>
+          ))}
+        </div>
+        <div className='container flex flex-col justify-center items-start'>
+          <label className='mx-1 my-3' htmlFor="email">Email</label>
+          <div className='container flex'>
+            <input
+              className='bg-input-light border-2 custom-border-color w-full field-focus p-1'
+              name="email"
+              type="text"
+              placeholder="Email"
+              value={email}
+              onChange={updateEmail}
+            />
+          </div>
+        </div>
+        <div className='container flex flex-col justify-center items-start'>
+          <label className='mx-1 my-3' htmlFor="password">Password</label>
+          <div className='container flex'>
+            <input
+              className='bg-input-light border-2 custom-border-color w-full field-focus p-1'
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={updatePassword}
+            />
+          </div>
+          <div className='container flex justify-end items-center mt-10'>
+            <button className='flex justify-center items-center w-28 h-8 border-2 custom-border-color bg-input-light field-focus' style={{ color: '#ea80fc' }} type='submit'>Login</button>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 

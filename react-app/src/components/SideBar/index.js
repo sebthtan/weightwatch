@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import Transition from '../Transition'
 import { InsertChart, FitnessCenter, DateRange, AccessAlarm } from '@material-ui/icons'

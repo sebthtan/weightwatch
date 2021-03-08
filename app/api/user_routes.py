@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from app.models import User, Entry
+from app.models import User, Entry, Workout, Exercise, Workouts_Exercises, db
+from sqlalchemy.orm import joinedload
 
 user_routes = Blueprint('users', __name__)
 
@@ -31,6 +32,30 @@ def get_user_entries():
     return jsonify(user_entries)
 
 
-# @user_routes.route('/entries/new')
-# @login_required
-# def post_entry():
+@user_routes.route('/<int:id>/workouts', methods=['GET'])
+@login_required
+def get_workouts(id):
+    user = User.query.options(joinedload(
+        'workouts').joinedload('exercises').joinedload('exercise'),
+        joinedload('workouts').joinedload('users')).get(id)
+    res = []
+
+    for workout in user.workouts:
+        obj = workout.to_dict()
+        exercises = []
+        obj['exercises'] = exercises
+        res.append(obj)
+        creator = User.query.get(workout.created_by)
+        obj['creator_username'] = creator.username
+
+        for w_e in workout.exercises:
+            exercise = w_e.exercise
+            exercise_dict = exercise.to_dict()
+            w_e_dict = w_e.to_dict()
+
+            exercise_dict['sets'] = w_e_dict['sets']
+            exercise_dict['repetitions'] = w_e_dict['repetitions']
+
+            exercises.append(exercise_dict)
+
+    return jsonify(res)
