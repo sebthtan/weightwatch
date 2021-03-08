@@ -4,6 +4,7 @@ const CREATE_WORKOUT = 'workouts/CREATE_WORKOUT'
 const UPDATE_WORKOUT = 'workouts/UPDATE_WORKOUT'
 const REMOVE_WORKOUT = 'workouts/REMOVE_WORKOUT'
 const REMOVE_BOOKMARK = 'workouts/REMOVE_BOOKMARK'
+const ADD_BOOKMARK = 'workouts/ADD_BOOKMARK'
 
 const getBookmarkedWorkouts = (workouts) => ({
     type: GET_WORKOUTS,
@@ -33,6 +34,11 @@ const removeWorkout = (workoutId) => ({
 const removeBookmark = (workoutId) => ({
     type: REMOVE_BOOKMARK,
     payload: workoutId
+})
+
+const addBookmark = (workout) => ({
+    type: ADD_BOOKMARK,
+    payload: workout
 })
 
 export const getWorkouts = (userId) => async dispatch => {
@@ -105,6 +111,15 @@ export const unbookmarkWorkout = (workoutId) => async dispatch => {
     dispatch(removeBookmark(workoutId))
 }
 
+export const bookmarkWorkout = (workoutId) => async dispatch => {
+    const res = await fetch(`/api/users/workouts/${workoutId}/bookmark`, {
+        method: 'POST',
+        body: workoutId
+    })
+    const workout = res.json()
+    dispatch(addBookmark(workout))
+}
+
 const initialState = {
     saved: {},
     owned: {},
@@ -128,11 +143,12 @@ const workoutsReducer = (state = initialState, action) => {
             newState = { ...state, owned }
             return newState
         case CREATE_WORKOUT:
-            newState = { ...state, [action.payload.id]: action.payload }
+            saved[action.payload.id] = action.payload
+            newState = { ...state, saved }
             return newState
         case UPDATE_WORKOUT:
-            newState = { ...state, [action.payload.id]: action.payload }
-            return newState
+            saved[action.payload.id] = action.payload
+            newState = { ...state, saved }
         case REMOVE_WORKOUT:
             newState = { ...state }
             delete newState.owned[action.payload]
@@ -140,6 +156,10 @@ const workoutsReducer = (state = initialState, action) => {
         case REMOVE_BOOKMARK:
             newState = { ...state }
             delete newState.saved[action.payload]
+            return newState
+        case ADD_BOOKMARK:
+            saved[action.payload.id] = action.payload
+            newState = { ...state, saved }
             return newState
         default:
             return state

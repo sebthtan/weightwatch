@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import entriesReducer from './entries'
 import exercisesReducer from './exercises'
+import searchReducer from './search'
 import sessionReducer from './session'
 import workoutsReducer from './workouts'
 
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
     entries: entriesReducer,
     workouts: workoutsReducer,
     exercises: exercisesReducer,
+    search: searchReducer,
 })
 
 let enhancer

@@ -99,4 +99,11 @@ def update_user_bookmark(workout_id):
         user.workouts.remove(workout)
 
         db.session.commit()
-        return 'deleted'
+        return workout.to_dict()
+
+    if request.method == 'POST':
+        workout = Workout.query.get(request.body)
+        user.workouts.append(workout)
+
+        db.session.commit()
+        return workout.to_dict()

@@ -3,7 +3,8 @@ from flask_login import login_required, current_user
 from app.models import User, Workout, Exercise, db, Workouts_Exercises
 from app.forms.workout_form import WorkoutForm, WorkoutsExercisesForm
 from app.helpers import validation_errors_to_error_messages
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, join
+from sqlalchemy import and_
 
 
 workout_routes = Blueprint('workouts', __name__)
@@ -69,3 +70,18 @@ def create_workout():
         db.session.commit()
         return {workout.to_dict(), workout_exercise.to_dict()}
     return {'errors': validation_errors_to_error_messages(form.errors)}
+
+
+@workout_routes.route('/search/<term>')
+@login_required
+def search_workouts(term):
+    res = []
+
+    workouts = Workout.query.filter(
+        Workout.workout_name.ilike(f"%{term}%"),
+        # User.username.ilike(f'%{username}%'),
+    ).all()
+
+    for workout in workouts:
+        res.append(workout.to_dict())
+    return jsonify(res)

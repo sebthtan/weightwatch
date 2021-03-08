@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux'
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import LogoutButton from '../auth/LogoutButton';
 import { Menu, MenuOpen } from '@material-ui/icons'
 import SideBar from '../SideBar'
 import logo3 from './logo3.png'
 
 const NavBar = ({ setAuthenticated }) => {
+  const history = useHistory()
   const user = useSelector(state => state.session.user)
   const [isOpen, setIsOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const toggleSidebar = () => {
     setIsOpen(prev => !prev)
+  }
+
+  const searchRequest = (e) => {
+    e.preventDefault()
+    history.push(`/search?name=${searchTerm}`)
   }
 
   return (
@@ -23,6 +30,18 @@ const NavBar = ({ setAuthenticated }) => {
               {isOpen ? <MenuOpen /> : <Menu />}
               <img src={logo3} alt='logo' className='max-h-14 w-auto' />
             </button>
+          </div>
+          <div className='flex items-center justify-center p-2'>
+            <div>
+              <form onSubmit={searchRequest}>
+                <input
+                  type='search'
+                  onChange={e => setSearchTerm(e.target.value)}
+                  value={searchTerm}
+                  className='bg-input-light border-2 custom-border-color w-full field-focus p-1'
+                ></input>
+              </form>
+            </div>
           </div>
           <div className='flex items-center'>
             <div className='flex items-center px-3'>

@@ -13,6 +13,7 @@ const WorkoutsPage = () => {
     const workouts = useSelector(state => state.workouts)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
+
     useEffect(() => {
         if (isModalOpen) {
             document.body.classList.add('overflow-hidden')
