@@ -135,7 +135,7 @@ const workoutsReducer = (state = initialState, action) => {
             return newState
         case REMOVE_WORKOUT:
             newState = { ...state }
-            delete newState[action.payload]
+            delete newState.owned[action.payload]
             return newState
         case REMOVE_BOOKMARK:
             newState = { ...state }

@@ -162,7 +162,7 @@ const WorkoutsPage = () => {
                             <button
                                 className='main-yellow'
                                 type='button'
-                                onClick={() => removeBookmarkRequest(workout.id)}
+                            // onClick={() => removeBookmarkRequest(workout.id)}
                             >
                                 <BookmarkBorder />
                             </button>
