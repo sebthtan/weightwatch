@@ -56,7 +56,6 @@ export const deleteEntry = (entryId) => async dispatch => {
     await fetch(`/api/entries/${entryId}`, {
         method: 'DELETE',
     })
-    console.log('IN ACTION THUNK', entryId)
     dispatch(deleteOneEntry(entryId))
 }
 
@@ -103,12 +102,6 @@ const entriesReducer = (state = initialState, action) => {
         case DELETE_ENTRY:
             newState = { ...state }
             delete newState[action.payload]
-            // delete newState['created']
-            // let found = newState.find(async entry => {
-            //     await entry.id === action.payload
-            // })
-            // delete newState[newState.indexOf(found)]
-            // newState.filter(entry => entry.id !== action.payload)
             return newState
         case REMOVE_ENTRIES:
             newState = {}

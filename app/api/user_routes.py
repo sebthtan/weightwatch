@@ -38,10 +38,10 @@ def get_workouts(id):
     user = User.query.options(joinedload(
         'workouts').joinedload('exercises').joinedload('exercise')).get(id)
     res = []
-    exercises = []
 
     for workout in user.workouts:
         obj = workout.to_dict()
+        exercises = []
         obj['exercises'] = exercises
         res.append(obj)
 

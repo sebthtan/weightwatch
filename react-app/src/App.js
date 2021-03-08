@@ -11,6 +11,7 @@ import WorkoutsPage from './components/WorkoutsPage'
 import { authenticate } from "./services/auth";
 import { useDispatch } from "react-redux";
 import { addUser } from "./store/session";
+import { getAllExercises } from './store/exercises'
 
 function App() {
   const dispatch = useDispatch()
@@ -23,6 +24,7 @@ function App() {
       if (!user.errors) {
         setAuthenticated(true);
         dispatch(addUser(user))
+        dispatch(getAllExercises())
       }
       setLoaded(true);
     })();
