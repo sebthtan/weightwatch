@@ -18,7 +18,8 @@ class Workout(db.Model):
     users = db.relationship('User', secondary=users_workouts,
                             back_populates='workouts')
     exercises = db.relationship(
-        'Workouts_Exercises', back_populates='workout')
+        'Workouts_Exercises', back_populates='workout',
+        cascade='all, delete-orphan')
 
     def to_dict(self):
         return {

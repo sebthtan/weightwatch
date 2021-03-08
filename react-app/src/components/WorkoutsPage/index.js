@@ -2,7 +2,8 @@ import './Workouts.css'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { getWorkouts } from '../../store/workouts'
-import { Add } from '@material-ui/icons'
+import { deleteWorkout } from '../../store/workouts'
+import { Add, Delete, Bookmark, BookmarkBorder } from '@material-ui/icons'
 import Modal from 'react-modal'
 import WorkoutForm from '../WorkoutForm'
 
@@ -51,11 +52,15 @@ const WorkoutsPage = () => {
         dispatch(getWorkouts(user.id))
     }, [dispatch, user.id])
 
+    const deleteRequest = (id) => {
+        dispatch(deleteWorkout(id))
+    }
+
     return (
         <div className='w-screen flex flex-col text-gray-300 items-center'>
             <div className='flex w-3/5 mb-4 mt-10 items-end justify-between'>
                 <div className='flex justify-start items-center '>
-                    <h1 className='text-5xl font-bold'>{`My Workouts (${workoutsArr.length})`}</h1>
+                    <h1 className='text-5xl font-bold'>{`My Active Workouts (${workoutsArr.length})`}</h1>
                 </div>
                 <button
                     type='button'
@@ -73,8 +78,27 @@ const WorkoutsPage = () => {
                 </Modal>
             </div>
             {workoutsArr.length > 0 ? (workoutsArr.map(workout =>
-                <div key={workout.id} className='m-0 w-3/5 p-4 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl shadow-md border-2' style={{ borderColor: '#373737' }}>
-                    <h2 className='self-start text-gray-300 text-2xl font-bold-hover font-bold m-4 main-pink'>{workout.workout_name}</h2>
+                <div key={workout.id} className='m-0 w-3/5 p-4 my-3 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl shadow-md border-2' style={{ borderColor: '#373737' }}>
+                    <div className='flex w-full justify-between items-center'>
+                        <h2 className='self-start text-gray-300 text-2xl font-bold-hover font-bold m-4 main-pink'>{workout.workout_name}</h2>
+                        <div className='flex '>
+                            <button
+                                className='main-yellow'
+                                type='button'
+                            >
+                                <Bookmark />
+                            </button>
+                            {workout.created_by === user.id &&
+                                <button
+                                    className='main-yellow'
+                                    type='button'
+                                    onClick={() => deleteRequest(workout.id)}
+                                >
+                                    <Delete />
+                                </button>
+                            }
+                        </div>
+                    </div>
                     <div className='grid grid-cols-3 gap-4 container'>
                         <div className='flex justify-start items-center'>
                             {/* <h2 className='p-4'>Exercise</h2> */}
@@ -85,8 +109,8 @@ const WorkoutsPage = () => {
                         <div className='flex justify-center items-center'>
                             <h2 className='font-bold'>Repetitions</h2>
                         </div>
-                        {workout.exercises.map(exercise =>
-                            <>
+                        {workout.exercises.map((exercise, idx) =>
+                            <React.Fragment key={`${exercise.id}-${idx}`}>
                                 <div className='flex container justify-start items-center'>
                                     <h2 className='font-bold p-4'>{exercise.exercise_name}</h2>
                                 </div>
@@ -109,7 +133,7 @@ const WorkoutsPage = () => {
                                     >
                                     </input>
                                 </div>
-                            </>
+                            </React.Fragment>
                         )}
                     </div>
                 </div>

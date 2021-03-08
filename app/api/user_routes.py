@@ -36,7 +36,8 @@ def get_user_entries():
 @login_required
 def get_workouts(id):
     user = User.query.options(joinedload(
-        'workouts').joinedload('exercises').joinedload('exercise')).get(id)
+        'workouts').joinedload('exercises').joinedload('exercise'),
+        joinedload('workouts').joinedload('users')).get(id)
     res = []
 
     for workout in user.workouts:
@@ -44,6 +45,8 @@ def get_workouts(id):
         exercises = []
         obj['exercises'] = exercises
         res.append(obj)
+        creator = User.query.get(workout.created_by)
+        obj['creator_username'] = creator.username
 
         for w_e in workout.exercises:
             exercise = w_e.exercise

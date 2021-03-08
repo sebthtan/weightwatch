@@ -31,6 +31,7 @@ def update_workout(id):
 
     if request.method == 'DELETE':
         if workout.created_by == current_user.id:
+            workout.users = []
             db.session.delete(workout)
             db.session.commit()
             return workout.to_dict()

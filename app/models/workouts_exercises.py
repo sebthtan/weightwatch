@@ -17,7 +17,8 @@ class Workouts_Exercises(db.Model):
         db.Date, default=datetime.date.today(), nullable=False)
 
     exercise = db.relationship('Exercise', back_populates='workouts')
-    workout = db.relationship('Workout', back_populates='exercises')
+    workout = db.relationship(
+        'Workout', back_populates='exercises')
 
     def to_dict(self):
         return {
