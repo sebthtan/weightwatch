@@ -114,10 +114,10 @@ export const unbookmarkWorkout = (workoutId) => async dispatch => {
 export const bookmarkWorkout = (workoutId) => async dispatch => {
     const res = await fetch(`/api/users/workouts/${workoutId}/bookmark`, {
         method: 'POST',
-        body: workoutId
     })
-    const workout = res.json()
+    const workout = await res.json()
     dispatch(addBookmark(workout))
+    return workout
 }
 
 const initialState = {
@@ -174,6 +174,7 @@ const workoutsReducer = (state = initialState, action) => {
         case REMOVE_WORKOUT:
             newState = { ...state }
             delete newState.owned[action.payload]
+            delete newState.saved[action.payload]
             return newState
         case REMOVE_BOOKMARK:
             newState = { ...state }

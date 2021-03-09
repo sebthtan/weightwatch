@@ -46,7 +46,6 @@ def update_workout(id):
     #     if workout.created_by == current_user.id:
 
 
-# DRAFT POST
 @workout_routes.route('/', methods=['POST'])
 @login_required
 def create_workout():

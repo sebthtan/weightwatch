@@ -2,7 +2,7 @@ import './Workouts.css'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { getCreatedWorkouts, getWorkouts } from '../../store/workouts'
-import { deleteWorkout, unbookmarkWorkout } from '../../store/workouts'
+import { deleteWorkout, unbookmarkWorkout, bookmarkWorkout } from '../../store/workouts'
 import { Add, Delete, Bookmark, BookmarkBorder } from '@material-ui/icons'
 import Modal from 'react-modal'
 import WorkoutForm from '../WorkoutForm'
@@ -12,7 +12,6 @@ const WorkoutsPage = () => {
     const user = useSelector(state => state.session.user)
     const workouts = useSelector(state => state.workouts)
     const [isModalOpen, setIsModalOpen] = useState(false)
-
 
     useEffect(() => {
         if (isModalOpen) {
@@ -27,6 +26,8 @@ const WorkoutsPage = () => {
 
     const openModal = () => {
         setIsModalOpen(true)
+        console.log('saved', savedWorkoutsArr)
+        console.log('created', createdWorkoutsArr)
     }
 
     const closeModal = () => {
@@ -61,6 +62,10 @@ const WorkoutsPage = () => {
 
     const removeBookmarkRequest = (id) => {
         dispatch(unbookmarkWorkout(id))
+    }
+
+    const addBookmarkRequest = (id) => {
+        dispatch(bookmarkWorkout(id))
     }
 
     return (
@@ -111,26 +116,13 @@ const WorkoutsPage = () => {
                         {workout.exercises && workout.exercises.map((exercise, idx) =>
                             <React.Fragment key={`${exercise.id}-${idx}`}>
                                 <div className='flex container justify-start items-center'>
-                                    <h2 className='font-bold p-4'>{exercise.exercise_name}</h2>
+                                    <h2 className='font-bold p-4'>{`${exercise.exercise_name} :`}</h2>
                                 </div>
                                 <div className='flex justify-center items-center'>
-                                    <input
-                                        type='number'
-                                        className='text-center main-yellow bg-white bg-opacity-10 rounded px-1 border hover:bg-opacity-20'
-                                        style={{ borderColor: '#fcf480', width: '30px' }}
-                                        placeholder={exercise.sets}
-                                    >
-                                        {/* <h2>{exercise.sets}</h2> */}
-                                    </input>
+                                    <h2 className='font-bold'>{exercise.sets}</h2>
                                 </div>
                                 <div className='flex justify-center items-center'>
-                                    <input
-                                        type='number'
-                                        className='text-center main-yellow bg-white bg-opacity-10 rounded px-1 border hover:bg-opacity-20'
-                                        style={{ borderColor: '#fcf480', width: '30px' }}
-                                        placeholder={exercise.repetitions}
-                                    >
-                                    </input>
+                                    <h2 className='font-bold'>{exercise.repetitions}</h2>
                                 </div>
                             </React.Fragment>
                         )}
@@ -160,22 +152,45 @@ const WorkoutsPage = () => {
                     <div className='flex w-full justify-between items-center'>
                         <h2 className='self-start text-gray-300 text-2xl font-bold m-4 main-pink'>{workout.workout_name}</h2>
                         <div className='flex '>
-                            <button
-                                className='main-yellow'
-                                type='button'
-                            // onClick={() => removeBookmarkRequest(workout.id)}
-                            >
-                                <BookmarkBorder />
-                            </button>
-                            {workout.created_by === user.id &&
-                                <button
-                                    className='main-yellow'
-                                    type='button'
-                                    onClick={() => deleteRequest(workout.id)}
-                                >
-                                    <Delete />
-                                </button>
-                            }
+                            {JSON.stringify(savedWorkoutsArr).includes(JSON.stringify(workout)) ? (
+                                <>
+                                    <button
+                                        className='main-yellow'
+                                        type='button'
+                                        onClick={() => removeBookmarkRequest(workout.id)}
+                                    >
+                                        <Bookmark />
+                                    </button>
+                                    {workout.created_by === user.id &&
+                                        <button
+                                            className='main-yellow'
+                                            type='button'
+                                            onClick={() => deleteRequest(workout.id)}
+                                        >
+                                            <Delete />
+                                        </button>
+                                    }
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        className='main-yellow'
+                                        type='button'
+                                        onClick={() => addBookmarkRequest(workout.id)}
+                                    >
+                                        <BookmarkBorder />
+                                    </button>
+                                    {workout.created_by === user.id &&
+                                        <button
+                                            className='main-yellow'
+                                            type='button'
+                                            onClick={() => deleteRequest(workout.id)}
+                                        >
+                                            <Delete />
+                                        </button>
+                                    }
+                                </>
+                            )}
                         </div>
                     </div>
                     <div className='grid grid-cols-3 gap-4 container'>
@@ -191,7 +206,7 @@ const WorkoutsPage = () => {
                         {workout.exercises.map((exercise, idx) =>
                             <React.Fragment key={`${exercise.id}-${idx}`}>
                                 <div className='flex container justify-start items-center'>
-                                    <h2 className='font-bold p-4'>{exercise.exercise_name}</h2>
+                                    <h2 className='font-bold p-4'>{`${exercise.exercise_name} :`}</h2>
                                 </div>
                                 <div className='flex justify-center items-center'>
                                     <input
@@ -214,6 +229,9 @@ const WorkoutsPage = () => {
                                 </div>
                             </React.Fragment>
                         )}
+                    </div>
+                    <div>
+                        <h2></h2>
                     </div>
                 </div>
             )) : (

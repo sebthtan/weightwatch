@@ -102,8 +102,26 @@ def update_user_bookmark(workout_id):
         return workout.to_dict()
 
     if request.method == 'POST':
-        workout = Workout.query.get(request.body)
+        workout = Workout.query.get(workout_id)
         user.workouts.append(workout)
 
         db.session.commit()
-        return workout.to_dict()
+
+        obj = workout.to_dict()
+        print('OBJECT!@#$!@#$', obj)
+        exercises = []
+        obj['exercises'] = exercises
+        creator = User.query.get(workout.created_by)
+        obj['creator_username'] = creator.username
+
+        for w_e in workout.exercises:
+            exercise = w_e.exercise
+            exercise_dict = exercise.to_dict()
+            w_e_dict = w_e.to_dict()
+
+            exercise_dict['sets'] = w_e_dict['sets']
+            exercise_dict['repetitions'] = w_e_dict['repetitions']
+
+            exercises.append(exercise_dict)
+        print('OBJ!#$@!@#$@#!$', obj)
+        return jsonify(obj)
