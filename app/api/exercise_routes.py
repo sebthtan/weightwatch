@@ -7,7 +7,7 @@ exercise_routes = Blueprint('exercises', __name__)
 
 
 @exercise_routes.route('/', methods=['GET'])
-# @login_required
+@login_required
 def get_all_exercises():
     exercises = Exercise.query.order_by(
         Exercise.exercise_name.asc()).all()

@@ -23,7 +23,6 @@ def user(id):
 @user_routes.route('/entries')
 @login_required
 def get_user_entries():
-    # user = User.query.get(id)
     entries = Entry.query.filter(Entry.user_id == current_user.id).order_by(
         Entry.created_at.asc()).all()
     user_entries = []
@@ -59,3 +58,52 @@ def get_workouts(id):
             exercises.append(exercise_dict)
 
     return jsonify(res)
+
+
+@user_routes.route('/<int:id>/workouts/created', methods=['GET'])
+@login_required
+def get_created_workouts(id):
+    created = Workout.query.options(
+        joinedload('exercises').joinedload('exercise'),
+    ).filter(Workout.created_by == id).all()
+
+    res = []
+    for workout in created:
+        obj = workout.to_dict()
+        exercises = []
+        obj['exercises'] = exercises
+        res.append(obj)
+        creator = User.query.get(workout.created_by)
+        obj['creator_username'] = creator.username
+
+        for w_e in workout.exercises:
+            exercise = w_e.exercise
+            exercise_dict = exercise.to_dict()
+            w_e_dict = w_e.to_dict()
+
+            exercise_dict['sets'] = w_e_dict['sets']
+            exercise_dict['repetitions'] = w_e_dict['repetitions']
+
+            exercises.append(exercise_dict)
+
+    return jsonify(res)
+
+
+@user_routes.route('/workouts/<int:workout_id>/bookmark',
+                   methods=['POST', 'DELETE'])
+@login_required
+def update_user_bookmark(workout_id):
+    user = User.query.get(current_user.id)
+    if request.method == 'DELETE':
+        workout = Workout.query.get(workout_id)
+        user.workouts.remove(workout)
+
+        db.session.commit()
+        return workout.to_dict()
+
+    if request.method == 'POST':
+        workout = Workout.query.get(request.body)
+        user.workouts.append(workout)
+
+        db.session.commit()
+        return workout.to_dict()
