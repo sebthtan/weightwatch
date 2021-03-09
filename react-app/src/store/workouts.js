@@ -67,6 +67,7 @@ export const createWorkout = (workout) => async dispatch => {
         })
         if (!res.ok) throw res
         const newWorkout = await res.json()
+        console.log('NEW WORKOUT', newWorkout)
         dispatch(addNewWorkout(newWorkout))
         return newWorkout
     } catch (err) {
@@ -126,28 +127,50 @@ const initialState = {
 
 const workoutsReducer = (state = initialState, action) => {
     let newState
-    let owned = {}
-    let saved = {}
+    let newOwned = {}
+    let newSaved = {}
     switch (action.type) {
         case GET_WORKOUTS:
             action.payload.forEach(workout => {
-                saved[workout.id] = workout
+                newSaved[workout.id] = workout
             })
-            newState = { ...state, saved }
+            newState = {
+                ...state,
+                saved: {
+                    ...state.saved,
+                    ...newSaved,
+                }
+            }
             return newState
         case GET_CREATED:
             action.payload.forEach(workout => {
-                owned[workout.id] = workout
+                newOwned[workout.id] = workout
             })
-            newState = { ...state, owned }
+            newState = {
+                ...state,
+                owned: {
+                    ...state.owned,
+                    ...newOwned
+                }
+            }
             return newState
         case CREATE_WORKOUT:
-            saved[action.payload.id] = action.payload
-            newState = { ...state, saved }
+            newState = {
+                ...state,
+                owned: {
+                    ...state.owned,
+                    [action.payload.id]: action.payload
+                }
+            }
             return newState
         case UPDATE_WORKOUT:
-            saved[action.payload.id] = action.payload
-            newState = { ...state, saved }
+            newState = {
+                ...state,
+                owned: {
+                    ...state.owned,
+                    [action.payload.id]: action.payload
+                }
+            }
         case REMOVE_WORKOUT:
             newState = { ...state }
             delete newState.owned[action.payload]
@@ -157,8 +180,14 @@ const workoutsReducer = (state = initialState, action) => {
             delete newState.saved[action.payload]
             return newState
         case ADD_BOOKMARK:
-            saved[action.payload.id] = action.payload
-            newState = { ...state, saved }
+            newSaved[action.payload.id] = action.payload
+            newState = {
+                ...state,
+                saved: {
+                    ...state.saved,
+                    ...newSaved
+                }
+            }
             return newState
         default:
             return state

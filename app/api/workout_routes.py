@@ -7,6 +7,7 @@ from sqlalchemy.orm import joinedload, join
 from sqlalchemy import and_
 import json
 from collections import namedtuple
+import datetime
 
 
 workout_routes = Blueprint('workouts', __name__)
@@ -65,25 +66,37 @@ def create_workout():
         form.exercises.append_entry(w_e_form)
 
     if form.validate_on_submit():
-        res = []
+        exercises = []
         workout = Workout(
             workout_name=form.data['workout_name'],
             created_by=current_user.id
         )
         db.session.add(workout)
         db.session.flush()
-        res.append(workout.to_dict())
+        obj = workout.to_dict()
+        obj['exercises'] = exercises
         for idx, field in enumerate(form.exercises):
             workout_exercise = Workouts_Exercises(
                 workout_id=workout.id,
                 exercise_id=field.exercise_id.data,
                 sets=field.sets.data,
                 repetitions=field.repetitions.data,
+                created_at=datetime.date.today(),
+                updated_at=datetime.date.today(),
             )
             db.session.add(workout_exercise)
-            res.append(workout_exercise.to_dict())
+            db.session.flush()
+
+            exercise = workout_exercise.exercise
+            exercise_dict = exercise.to_dict()
+            workout_exercise_dict = workout_exercise.to_dict()
+
+            exercise_dict['sets'] = workout_exercise_dict['sets']
+            exercise_dict['repetitions'] = workout_exercise_dict['repetitions']
+
+            exercises.append(exercise_dict)
         db.session.commit()
-        return jsonify(res)
+        return jsonify(obj)
     return {'errors': validation_errors_to_error_messages(form.errors)}
 
 
