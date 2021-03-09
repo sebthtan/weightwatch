@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Add, Delete } from '@material-ui/icons'
-import createWorkout from '../../store/workouts'
+import { createWorkout } from '../../store/workouts'
 
 const WorkoutForm = ({ isModalOpen, setIsModalOpen }) => {
     const dispatch = useDispatch()
@@ -18,8 +18,8 @@ const WorkoutForm = ({ isModalOpen, setIsModalOpen }) => {
         if (res.length) return setErrors(['Must specify number of sets/reps per exercise.'])
         if (new Set(exerciseIdArr).size !== exerciseIdArr.length) return setErrors(['Cannot have duplicate exercises.'])
         const data = { newWorkoutName, fields }
-        console.log(data)
-        // dispatch(createWorkout(data))
+        console.log(fields)
+        dispatch(createWorkout(data))
         setIsModalOpen(false)
     }
 
@@ -31,13 +31,13 @@ const WorkoutForm = ({ isModalOpen, setIsModalOpen }) => {
 
     const handleSetsChange = (i, e) => {
         const newFields = [...fields]
-        newFields[i].sets = e.target.value
+        newFields[i].sets = Number(e.target.value)
         setFields(newFields)
     }
 
     const handleRepsChange = (i, e) => {
         const newFields = [...fields]
-        newFields[i].repetitions = e.target.value
+        newFields[i].repetitions = Number(e.target.value)
         setFields(newFields)
     }
 

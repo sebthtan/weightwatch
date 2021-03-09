@@ -75,8 +75,8 @@ const WorkoutsPage = () => {
                     </div>
                 </Modal>
             </div>
-            {savedWorkoutsArr.length > 0 ? (savedWorkoutsArr.map(workout =>
-                <div key={workout.id} className='m-0 w-3/5 p-4 my-3 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl shadow-md border-2' style={{ borderColor: '#373737' }}>
+            {savedWorkoutsArr.length > 0 ? (savedWorkoutsArr.map((workout, idx) =>
+                <div key={`${workout.id}-${idx}`} className='m-0 w-3/5 p-4 my-3 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl shadow-md border-2' style={{ borderColor: '#373737' }}>
                     <div className='flex w-full justify-between items-center'>
                         <h2 className='self-start text-gray-300 text-2xl font-bold m-4 main-pink'>{workout.workout_name}</h2>
                         <div className='flex '>
@@ -108,7 +108,7 @@ const WorkoutsPage = () => {
                         <div className='flex justify-center items-center'>
                             <h2 className='font-bold'>Repetitions</h2>
                         </div>
-                        {workout.exercises.map((exercise, idx) =>
+                        {workout.exercises && workout.exercises.map((exercise, idx) =>
                             <React.Fragment key={`${exercise.id}-${idx}`}>
                                 <div className='flex container justify-start items-center'>
                                     <h2 className='font-bold p-4'>{exercise.exercise_name}</h2>

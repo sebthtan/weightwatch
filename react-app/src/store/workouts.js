@@ -59,22 +59,21 @@ export const createWorkout = (workout) => async dispatch => {
     const { newWorkoutName, fields } = workout
     const formData = new FormData()
     formData.append('workout_name', newWorkoutName)
-    formData.append('exercises', fields)
+    formData.append('exercises', JSON.stringify(fields))
     try {
-
-        const res = await fetch('/api/workouts', {
+        const res = await fetch('/api/workouts/', {
             method: 'POST',
             body: formData
         })
         if (!res.ok) throw res
         const newWorkout = await res.json()
-        dispatch(addNewWorkout('yes'))
-        console.log(newWorkout)
+        dispatch(addNewWorkout(newWorkout))
         return newWorkout
     } catch (err) {
         return err
     }
 }
+
 
 export const updateWorkout = (workout) => async dispatch => {
     const { workoutId, exerciseId, sets, repetitions } = workout
@@ -127,16 +126,16 @@ const initialState = {
 
 const workoutsReducer = (state = initialState, action) => {
     let newState
+    let owned = {}
+    let saved = {}
     switch (action.type) {
         case GET_WORKOUTS:
-            let saved = {}
             action.payload.forEach(workout => {
                 saved[workout.id] = workout
             })
             newState = { ...state, saved }
             return newState
         case GET_CREATED:
-            let owned = {}
             action.payload.forEach(workout => {
                 owned[workout.id] = workout
             })

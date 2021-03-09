@@ -6,7 +6,7 @@ const setAll = (exercises) => ({
 })
 
 export const getAllExercises = () => async dispatch => {
-    const res = await fetch('/api/exercises')
+    const res = await fetch('/api/exercises/')
     const exercises = await res.json()
     dispatch(setAll(exercises))
     return exercises

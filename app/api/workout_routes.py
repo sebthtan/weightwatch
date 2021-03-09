@@ -5,6 +5,8 @@ from app.forms.workout_form import WorkoutForm, WorkoutsExercisesForm
 from app.helpers import validation_errors_to_error_messages
 from sqlalchemy.orm import joinedload, join
 from sqlalchemy import and_
+import json
+from collections import namedtuple
 
 
 workout_routes = Blueprint('workouts', __name__)
@@ -47,28 +49,41 @@ def update_workout(id):
 @workout_routes.route('/', methods=['POST'])
 @login_required
 def create_workout():
+    fields = json.loads(request.form['exercises'])
+
     form = WorkoutForm()
-    user = User.query.get(current_user.id)
     form['csrf_token'].data = request.cookies['csrf_token']
 
+    while len(form.exercises) > 0:
+        form.exercises.pop_entry()
+
+    for field in fields:
+        w_e_form = WorkoutsExercisesForm()
+        w_e_form.exercise_id = field['exercise_id']
+        w_e_form.sets = field['sets']
+        w_e_form.repetitions = field['repetitions']
+        form.exercises.append_entry(w_e_form)
+
     if form.validate_on_submit():
+        res = []
         workout = Workout(
             workout_name=form.data['workout_name'],
-            created_by=current_user.id,
+            created_by=current_user.id
         )
         db.session.add(workout)
         db.session.flush()
-        new_workout_id = workout.id
-
-        workout_exercise = Workouts_Exercises(
-            workout_id=new_workout_id,
-            exercise_id=form.data['exercise_id'],
-            sets=workout_exercise_form.data['sets'],
-            repetitions=workout_exercise_form.data['repetitions'],
-        )
-        db.session.add(workout_exercise)
+        res.append(workout.to_dict())
+        for idx, field in enumerate(form.exercises):
+            workout_exercise = Workouts_Exercises(
+                workout_id=workout.id,
+                exercise_id=field.exercise_id.data,
+                sets=field.sets.data,
+                repetitions=field.repetitions.data,
+            )
+            db.session.add(workout_exercise)
+            res.append(workout_exercise.to_dict())
         db.session.commit()
-        return {workout.to_dict(), workout_exercise.to_dict()}
+        return jsonify(res)
     return {'errors': validation_errors_to_error_messages(form.errors)}
 
 
