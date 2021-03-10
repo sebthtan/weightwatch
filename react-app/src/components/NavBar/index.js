@@ -19,6 +19,7 @@ const NavBar = ({ setAuthenticated }) => {
   const searchRequest = (e) => {
     e.preventDefault()
     history.push(`/search?name=${searchTerm}`)
+    setSearchTerm('')
   }
 
   return (
@@ -38,6 +39,7 @@ const NavBar = ({ setAuthenticated }) => {
                   type='search'
                   onChange={e => setSearchTerm(e.target.value)}
                   value={searchTerm}
+                  placeholder='Search'
                   className='bg-input-light border-2 custom-border-color w-full field-focus p-1'
                 ></input>
               </form>

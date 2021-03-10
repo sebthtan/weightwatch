@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { useSelector } from 'react-redux'
 import LoginForm from "./components/auth/LoginForm";
 import SignUpForm from "./components/auth/SignUpForm";
 import NavBar from "./components/NavBar";
@@ -19,6 +20,11 @@ function App() {
   const dispatch = useDispatch()
   const [authenticated, setAuthenticated] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const workouts = useSelector(state => state.workouts)
+  let savedWorkoutsArr
+  if (workouts.saved) savedWorkoutsArr = Object.values(workouts.saved)
+  let createdWorkoutsArr
+  if (workouts.owned) createdWorkoutsArr = Object.values(workouts.owned)
 
   useEffect(() => {
     (async () => {
@@ -60,13 +66,13 @@ function App() {
         <ProtectedRoute path='/workouts' exact={true} authenticated={authenticated}>
           <NavBar setAuthenticated={setAuthenticated} />
           <div className='content'>
-            <WorkoutsPage />
+            <WorkoutsPage savedWorkoutsArr={savedWorkoutsArr} createdWorkoutsArr={createdWorkoutsArr} />
           </div>
         </ProtectedRoute>
         <ProtectedRoute path="/search" authenticated={authenticated}>
           <NavBar setAuthenticated={setAuthenticated} />
           <div className='content'>
-            <SearchPage />
+            <SearchPage savedWorkoutsArr={savedWorkoutsArr} createdWorkoutsArr={createdWorkoutsArr} />
           </div>
         </ProtectedRoute>
         <ProtectedRoute path="/" exact={true} authenticated={authenticated}>

@@ -152,8 +152,8 @@ const WorkoutForm = ({ isModalOpen, setIsModalOpen }) => {
                 </div>
             )}
             <div className='container flex justify-end items-center mt-10'>
-                <button className='flex justify-center items-center w-28 h-8 border-2 custom-border-color bg-input-light field-focus' style={{ color: '#ea80fc' }} type='submit'>
-                    <h2 >
+                <button className='flex justify-center items-center w-28 h-8 border-2 custom-border-color bg-input-light hover:opacity-80 field-focus' style={{ color: '#ea80fc' }} type='submit'>
+                    <h2>
                         Add Workout
                     </h2>
                 </button>

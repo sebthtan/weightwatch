@@ -4,7 +4,7 @@ from app.models import User, Workout, Exercise, db, Workouts_Exercises
 from app.forms.workout_form import WorkoutForm, WorkoutsExercisesForm
 from app.helpers import validation_errors_to_error_messages
 from sqlalchemy.orm import joinedload, join
-from sqlalchemy import and_
+from sqlalchemy import or_
 import json
 from collections import namedtuple
 import datetime
@@ -102,13 +102,31 @@ def create_workout():
 @workout_routes.route('/search/<term>')
 @login_required
 def search_workouts(term):
-    res = []
-
-    workouts = Workout.query.filter(
+    workouts = Workout.query.join(
+        Workouts_Exercises
+    ).join(
+        Exercise
+    ).filter(or_(
+        Exercise.exercise_name.ilike(f"%{term}%"),
         Workout.workout_name.ilike(f"%{term}%"),
-        # User.username.ilike(f'%{username}%'),
-    ).all()
+    )).all()
 
+    res = []
     for workout in workouts:
-        res.append(workout.to_dict())
+        obj = workout.to_dict()
+        exercises = []
+        obj['exercises'] = exercises
+        res.append(obj)
+        creator = User.query.get(workout.created_by)
+        obj['creator_username'] = creator.username
+
+        for w_e in workout.exercises:
+            exercise = w_e.exercise
+            exercise_dict = exercise.to_dict()
+            w_e_dict = w_e.to_dict()
+
+            exercise_dict['sets'] = w_e_dict['sets']
+            exercise_dict['repetitions'] = w_e_dict['repetitions']
+
+            exercises.append(exercise_dict)
     return jsonify(res)
