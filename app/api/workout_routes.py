@@ -4,7 +4,7 @@ from app.models import User, Workout, Exercise, db, Workouts_Exercises
 from app.forms.workout_form import WorkoutForm, WorkoutsExercisesForm
 from app.helpers import validation_errors_to_error_messages
 from sqlalchemy.orm import joinedload, join
-from sqlalchemy import and_
+from sqlalchemy import or_
 import json
 from collections import namedtuple
 import datetime
@@ -102,12 +102,14 @@ def create_workout():
 @workout_routes.route('/search/<term>')
 @login_required
 def search_workouts(term):
-    workouts = Workout.query.options(
-        joinedload('exercises').joinedload('exercise'),
-    ).filter(
+    workouts = Workout.query.join(
+        Workouts_Exercises
+    ).join(
+        Exercise
+    ).filter(or_(
+        Exercise.exercise_name.ilike(f"%{term}%"),
         Workout.workout_name.ilike(f"%{term}%"),
-        # User.username.ilike(f'%{username}%'),
-    ).all()
+    )).all()
 
     res = []
     for workout in workouts:
