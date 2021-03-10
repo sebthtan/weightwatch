@@ -5,6 +5,11 @@ const UPDATE_WORKOUT = 'workouts/UPDATE_WORKOUT'
 const REMOVE_WORKOUT = 'workouts/REMOVE_WORKOUT'
 const REMOVE_BOOKMARK = 'workouts/REMOVE_BOOKMARK'
 const ADD_BOOKMARK = 'workouts/ADD_BOOKMARK'
+const LOGOUT = 'workouts/LOGOUT'
+
+export const logoutWorkouts = () => ({
+    type: LOGOUT,
+})
 
 const getBookmarkedWorkouts = (workouts) => ({
     type: GET_WORKOUTS,
@@ -47,6 +52,7 @@ export const getWorkouts = (userId) => async dispatch => {
     dispatch(getBookmarkedWorkouts(workouts))
     return workouts
 }
+
 
 export const getCreatedWorkouts = (userId) => async dispatch => {
     const res = await fetch(`/api/users/${userId}/workouts/created`)
@@ -171,6 +177,7 @@ const workoutsReducer = (state = initialState, action) => {
                     [action.payload.id]: action.payload
                 }
             }
+            return newState
         case REMOVE_WORKOUT:
             newState = { ...state }
             delete newState.owned[action.payload]
@@ -190,6 +197,8 @@ const workoutsReducer = (state = initialState, action) => {
                 }
             }
             return newState
+        case LOGOUT:
+            return {}
         default:
             return state
     }

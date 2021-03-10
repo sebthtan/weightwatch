@@ -16,7 +16,7 @@ const HomePage = () => {
             <>
                 <div className='w-screen flex flex-col items-center'>
                     <div className='w-7/12 pt-10 flex justify-start items-center'>
-                        <h1 className='text-gray-300 font-bold text-5xl'>Dashboard</h1>
+                        <h1 className='text-gray-300 font-normal text-5xl'>Dashboard</h1>
                     </div>
                     <LineGraph />
                 </div>

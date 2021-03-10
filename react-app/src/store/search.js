@@ -1,4 +1,9 @@
 const SET_RESULTS = 'search/SET_RESULTS'
+const LOGOUT = 'search/LOGOUT'
+
+export const logoutSearch = () => ({
+    type: LOGOUT,
+})
 
 const setSearchResults = (results) => ({
     type: SET_RESULTS,
@@ -7,10 +12,8 @@ const setSearchResults = (results) => ({
 
 export const searchWorkouts = (term) => async dispatch => {
     const res = await fetch(`/api/workouts/search/${term}`)
-    console.log(term)
     const workouts = await res.json()
     dispatch(setSearchResults(workouts))
-    console.log(workouts)
     return workouts
 }
 
@@ -21,14 +24,16 @@ const initialState = {
 
 const searchReducer = (state = initialState, action) => {
     let newState;
+    let results = {}
     switch (action.type) {
         case SET_RESULTS:
-            let results = {}
             action.payload.forEach(result =>
                 results[result.id] = result
             )
             newState = { ...state, results }
             return newState
+        case LOGOUT:
+            return {}
         default:
             return state;
     }

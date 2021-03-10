@@ -19,6 +19,7 @@ const NavBar = ({ setAuthenticated }) => {
   const searchRequest = (e) => {
     e.preventDefault()
     history.push(`/search?name=${searchTerm}`)
+    setSearchTerm('')
   }
 
   return (

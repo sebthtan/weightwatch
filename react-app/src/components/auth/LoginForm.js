@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { login } from "../../services/auth";
 import { useDispatch } from 'react-redux'
 import { addUser } from '../../store/session'
+import logo3 from '../NavBar/logo3.png'
+import splashimg from './splashimg.jpg'
 
 const LoginForm = ({ authenticated, setAuthenticated }) => {
   const dispatch = useDispatch()
@@ -44,9 +46,16 @@ const LoginForm = ({ authenticated, setAuthenticated }) => {
     return <Redirect to="/" />;
   }
 
-  return (
-    <div className='flex container justify-center items-center text-gray-300 h-full'>
-      <form onSubmit={onLogin} className='absolute bg-light top-1/3 flex flex-col w-1/4 p-16'>
+  return (<>
+    <div className='flex w-screen justify-center items-center h-screen opacity-40'
+      style={{ backgroundImage: `url(${splashimg})`, backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
+    >
+    </div>
+    <div className='flex justify-center items-center text-gray-300'>
+      <form onSubmit={onLogin} className='absolute top-1/4 flex flex-col w-1/4 px-16 pb-8 pt-16 z-10 rounded font-bold' style={{ backgroundColor: 'rgba(46, 45, 45, 0.95)' }}>
+        <div className='justify-self-start flex items-center justify-center mb-5'>
+          <img src={logo3} alt='logo' />
+        </div>
         <div>
           {errors.map((error) => (
             <div>{error}</div>
@@ -56,7 +65,7 @@ const LoginForm = ({ authenticated, setAuthenticated }) => {
           <label className='mx-1 my-3' htmlFor="email">Email</label>
           <div className='container flex'>
             <input
-              className='bg-input-light border-2 custom-border-color w-full field-focus p-1'
+              className='bg-white bg-opacity-10 border-2 custom-border-color w-full field-focus p-1'
               name="email"
               type="text"
               placeholder="Email"
@@ -69,7 +78,7 @@ const LoginForm = ({ authenticated, setAuthenticated }) => {
           <label className='mx-1 my-3' htmlFor="password">Password</label>
           <div className='container flex'>
             <input
-              className='bg-input-light border-2 custom-border-color w-full field-focus p-1'
+              className='bg-white bg-opacity-10 active: border-2 custom-border-color w-full field-focus p-1'
               name="password"
               type="password"
               placeholder="Password"
@@ -77,13 +86,31 @@ const LoginForm = ({ authenticated, setAuthenticated }) => {
               onChange={updatePassword}
             />
           </div>
-          <div className='container flex justify-end items-center mt-10'>
-            <button className='flex justify-center items-center w-28 h-8 border-2 custom-border-color bg-input-light field-focus' style={{ color: '#ea80fc' }} type='submit'>Login</button>
+          <div className='container flex justify-center items-center mt-10'>
+            <button
+              className='flex justify-center items-center w-full h-8 border-2 custom-border-color bg-white bg-opacity-10 hover:bg-opacity-20 field-focus font-bold rounded-full main-pink'
+              type='submit'
+            >
+              Log In
+            </button>
+          </div>
+          <div className='container flex justify-center items-center mt-10 pb-2 font-normal text-xs border-b-2' style={{ borderColor: '#3B3B3E' }}>
+            <p>Don't have an account?</p><nobr><Link to='/sign-up'>
+              <p className='font-bold main-pink pl-2'>Sign up</p>
+            </Link></nobr>
+          </div>
+          <div className='container flex justify-center items-center py-2 font-normal text-xs'>
+            <button
+              type='button'
+              className='font-bold main-pink'
+              onClick={onDemoLogin}
+            >Demo login</button>
           </div>
         </div>
       </form>
     </div>
-  );
+
+  </>);
 };
 
 export default LoginForm;

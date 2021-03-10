@@ -148,8 +148,9 @@ const LineGraph = () => {
         entries && (
             <div className='container flex justify-center min-w-full p-8'>
                 <div className='m-0 container w-3/5 p-4 flex flex-col items-center justify-center font-sans bg-white  bg-opacity-5 rounded-xl shadow-md border-2' style={{ borderColor: '#373737' }}>
-                    <div className='container flex justify-center items-center self-end w-8 h-8 rounded-full'>
-                        <button onClick={openModal} className='w-6 h-6 flex justify-center items-center'>
+                    <div className='container flex justify-between'>
+                        <h2 className='font-normal text-2xl text-gray-300 p-3 mb-5 self-center'>Weight Tracker</h2>
+                        <button onClick={openModal} className='w-6 h-6 flex justify-center self-start'>
                             <AddCircle className='text-gray-300' style={{ color: '#fcf480' }} />
                         </button>
                     </div>
@@ -161,7 +162,7 @@ const LineGraph = () => {
                     <div className='container flex justify-between items-center pb-8'>
                         <div className='container flex flex-col justify-center items-center'>
                             <button className='flex justify-center items-center focus:outline-none' onClick={changeToBodyWeight}>
-                                <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isBodyWeight ? { fontWeight: '750', color: '#ea80fc' } : {}}>
+                                <h1 className='text-gray-300 text-xl font-bold-hover font-light' style={isBodyWeight ? { fontWeight: '750', color: '#ea80fc' } : {}}>
                                     Body Weight
                         </h1>
                             </button>
@@ -169,7 +170,7 @@ const LineGraph = () => {
                         </div>
                         <div className='container flex flex-col justify-center items-center'>
                             <button className='flex justify-center items-center focus:outline-none' onClick={changeToBenchWeight}>
-                                <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isBench ? { fontWeight: '750', color: '#ea80fc' } : {}}>
+                                <h1 className='text-gray-300 text-xl font-bold-hover font-light' style={isBench ? { fontWeight: '750', color: '#ea80fc' } : {}}>
                                     Bench Press
                         </h1>
                             </button>
@@ -177,7 +178,7 @@ const LineGraph = () => {
                         </div>
                         <div className='container flex flex-col justify-center items-center'>
                             <button className='flex justify-center items-center focus:outline-none' onClick={changeToSquatWeight}>
-                                <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isSquat ? { fontWeight: '750', color: '#ea80fc' } : {}}>
+                                <h1 className='text-gray-300 text-xl font-bold-hover font-light' style={isSquat ? { fontWeight: '750', color: '#ea80fc' } : {}}>
                                     Squat
                         </h1>
                             </button>
@@ -185,7 +186,7 @@ const LineGraph = () => {
                         </div>
                         <div className='container flex flex-col justify-center items-center'>
                             <button className='flex justify-center items-center focus:outline-none' onClick={changeToDeadliftWeight}>
-                                <h1 className='text-gray-300 text-2xl font-bold-hover font-light' style={isDeadlift ? { fontWeight: '750', color: '#ea80fc' } : {}}>
+                                <h1 className='text-gray-300 text-xl font-bold-hover font-light' style={isDeadlift ? { fontWeight: '750', color: '#ea80fc' } : {}}>
                                     Deadlift
                         </h1>
                             </button>
