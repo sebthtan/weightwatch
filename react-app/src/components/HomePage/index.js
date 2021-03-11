@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import LineGraph from '../LineGraph'
 import { useSelector, useDispatch } from 'react-redux'
 import { getUserEntries } from '../../store/entries'
+import { getAllExercises } from '../../store/exercises'
 
 const HomePage = () => {
     const dispatch = useDispatch()
@@ -9,6 +10,7 @@ const HomePage = () => {
 
     useEffect(() => {
         dispatch(getUserEntries())
+        dispatch(getAllExercises())
     }, [dispatch])
 
     return (
